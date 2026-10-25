@@ -1,0 +1,2394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pixel 10a Dynamic Island — Step 5 Bonus Widgets &amp; APK Walkthrough</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #0b0f19;
+      color: #f1f5f9;
+    }
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    /* Spring animation matching iOS Dynamic Island physics */
+    .island-spring {
+      transition:
+        width 0.48s cubic-bezier(0.34, 1.56, 0.64, 1),
+        height 0.48s cubic-bezier(0.34, 1.56, 0.64, 1),
+        border-radius 0.48s cubic-bezier(0.34, 1.56, 0.64, 1),
+        transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
+        box-shadow 0.35s ease,
+        border-color 0.35s ease;
+      touch-action: none;
+    }
+    .island-spring:active {
+      transform: translateX(-50%) scale(0.98);
+    }
+    .xray-outline {
+      outline: 2px dashed #38bdf8;
+      outline-offset: 3px;
+    }
+    .camera-xray {
+      outline: 2px solid #f43f5e;
+      outline-offset: 2px;
+    }
+    @keyframes pulseGlow {
+      0%, 100% { opacity: 0.5; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.12); }
+    }
+    .dot-pulse {
+      animation: pulseGlow 2s infinite ease-in-out;
+    }
+    @keyframes eqBar1 {
+      0%, 100% { height: 4px; }
+      50% { height: 12px; }
+    }
+    @keyframes eqBar2 {
+      0%, 100% { height: 11px; }
+      35% { height: 4px; }
+      70% { height: 13px; }
+    }
+    @keyframes eqBar3 {
+      0%, 100% { height: 6px; }
+      45% { height: 13px; }
+    }
+    .eq-playing .bar-1 { animation: eqBar1 0.65s infinite ease-in-out; }
+    .eq-playing .bar-2 { animation: eqBar2 0.55s infinite ease-in-out; }
+    .eq-playing .bar-3 { animation: eqBar3 0.75s infinite ease-in-out; }
+    .eq-playing .bar-4 { animation: eqBar1 0.5s infinite ease-in-out; }
+
+    @keyframes ringPulse {
+      0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.6); }
+      50% { transform: scale(1.08); box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
+    }
+    .ring-pulse {
+      animation: ringPulse 1.3s infinite ease-in-out;
+    }
+    @keyframes heartPop {
+      0% { transform: scale(1); }
+      40% { transform: scale(1.38); }
+      100% { transform: scale(1); }
+    }
+    .heart-pop {
+      animation: heartPop 0.35s ease-out;
+    }
+    .notch-ring-progress {
+      transition: stroke-dashoffset 0.25s linear, stroke 0.3s ease;
+      transform: rotate(-90deg);
+      transform-origin: 50% 50%;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+  <!-- Top Header -->
+  <header class="border-b border-slate-800/80 bg-slate-900/70 backdrop-blur sticky top-0 z-30">
+    <div class="max-w-5xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center gap-2.5">
+        <div class="w-8 h-8 rounded-xl bg-emerald-500/20 border border-emerald-400/30 flex items-center justify-center text-emerald-400 font-bold text-sm">
+          05
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="font-semibold text-sm sm:text-base text-white">Pixel 10a Dynamic Island</h1>
+            <span class="text-xs px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-medium">Step 5: Maps Nav, Live Cricket, Privacy Dots &amp; APK Guide</span>
+          </div>
+          <p class="text-xs text-slate-400">All-in-One Pixel 10a Dynamic Island + Step-by-Step Android Studio Walkthrough</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <button id="fullscreenPhoneBtn" class="px-3 py-1.5 rounded-lg text-xs font-medium bg-emerald-600 hover:bg-emerald-500 text-white transition">
+          📱 Full-Screen Phone Mode
+        </button>
+        <button id="soundToggleBtn" class="px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-800 hover:bg-slate-700 text-emerald-300 border border-slate-700 transition">
+          🔊 Sound: ON
+        </button>
+        <button id="xrayToggleBtn" class="px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition flex items-center gap-1.5">
+          <span id="xrayDot" class="w-2 h-2 rounded-full bg-slate-500"></span>
+          <span>X-Ray Anatomy</span>
+        </button>
+        <button id="viewModeBtn" class="px-3 py-1.5 rounded-lg text-xs font-medium bg-indigo-600 hover:bg-indigo-500 text-white transition">
+          View Android Code
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Quick 1-Tap GitHub Copy Banner for Mobile -->
+  <div class="bg-emerald-950/90 border-b border-emerald-500/40 px-4 py-2.5">
+    <div class="max-w-5xl mx-auto flex flex-wrap items-center justify-between gap-2">
+      <div class="text-xs text-emerald-200">
+        <strong class="text-white">Ready for GitHub (`build-apk.yml`):</strong> Tap the button to copy the code, then paste it into <code class="mono text-emerald-300">Enter file contents here</code> on GitHub!
+      </div>
+      <button id="topQuickCopyGithubBtn" class="px-3.5 py-1.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs shadow transition">
+        📋 Tap to Copy Code for GitHub
+      </button>
+    </div>
+  </div>
+
+
+  <!-- Main Content Grid -->
+  <main class="max-w-5xl mx-auto w-full px-4 py-6 flex-1 grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+    
+    <!-- Left Column: Interactive Pixel 10a Simulator -->
+    <section class="lg:col-span-5 flex flex-col items-center">
+      <div class="w-full max-w-[340px]">
+        <!-- Status Banner above phone -->
+        <div class="mb-3 flex items-center justify-between text-xs text-slate-400 px-1">
+          <span>Target: <strong class="text-slate-200">Google Pixel 10a</strong></span>
+          <span id="stateBadge" class="font-mono text-emerald-300 bg-emerald-950/80 border border-emerald-800/60 px-2 py-0.5 rounded">mode = MAPS_NAV • expanded</span>
+        </div>
+
+        <!-- Pixel 10a Phone Bezel Frame -->
+        <div class="relative w-full aspect-[9/17] max-h-[615px] rounded-[40px] p-3 bg-gradient-to-b from-slate-700 via-slate-800 to-slate-900 shadow-2xl border border-slate-600/50">
+          <!-- Inner OLED Screen -->
+          <div id="phoneScreen" class="relative w-full h-full rounded-[30px] overflow-hidden bg-gradient-to-br from-indigo-950 via-slate-900 to-slate-950 flex flex-col justify-between select-none transition-colors duration-500">
+            
+            <!-- Wallpaper decorative glow -->
+            <div class="absolute -top-10 left-1/2 -translate-x-1/2 w-56 h-56 bg-indigo-500/20 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="absolute bottom-12 -right-10 w-48 h-48 bg-cyan-500/15 rounded-full blur-3xl pointer-events-none"></div>
+
+            <!-- Status Bar Row -->
+            <div class="relative z-10 flex items-center justify-between px-6 pt-3.5 text-[11px] font-semibold text-slate-200">
+              <span>09:42</span>
+              <div class="flex items-center gap-1.5">
+                <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 3C6.95 3 3.15 4.85 0 7.23L12 22 24 7.25C20.85 4.87 17.05 3 12 3z"/></svg>
+                <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M2 22h20V2z"/></svg>
+                <div class="w-5 h-2.5 rounded-sm border border-slate-300 p-0.5 flex items-center">
+                  <div class="w-3.5 h-full bg-emerald-400 rounded-[1px]"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Physical Selfie Camera Cutout + Circular Progress Ring Around Notch! -->
+            <div id="cameraCutout" title="Pixel 10a Front Camera Cutout + Circular Progress Ring" class="absolute top-[7px] left-1/2 -translate-x-1/2 z-30 w-[24px] h-[24px] rounded-full flex items-center justify-center pointer-events-none">
+              <svg id="notchProgressSvg" class="w-[24px] h-[24px] absolute inset-0" viewBox="0 0 28 28">
+                <circle cx="14" cy="14" r="11" fill="none" stroke="rgba(56, 189, 248, 0.2)" stroke-width="2.5"></circle>
+                <circle
+                  id="notchProgressCircle"
+                  class="notch-ring-progress"
+                  cx="14"
+                  cy="14"
+                  r="11"
+                  fill="none"
+                  stroke="#38bdf8"
+                  stroke-width="2.5"
+                  stroke-linecap="round"
+                  stroke-dasharray="69.115"
+                  stroke-dashoffset="22.1"
+                ></circle>
+              </svg>
+              <!-- Physical Camera Lens in the center -->
+              <div class="w-[15px] h-[15px] rounded-full bg-[#050507] border border-slate-800/90 flex items-center justify-center">
+                <div class="w-2 h-2 rounded-full bg-indigo-950/90 border border-indigo-400/20"></div>
+              </div>
+            </div>
+
+            <!-- Camera & Mic Privacy Dots (Step 5 Bonus) -->
+            <div id="privacyDotsContainer" class="hidden absolute top-[15px] left-1/2 translate-x-[14px] z-30 flex items-center gap-1 pointer-events-none">
+              <span title="Camera in use" class="w-2 h-2 rounded-full bg-emerald-400 dot-pulse shadow shadow-emerald-400"></span>
+              <span title="Microphone in use" class="w-2 h-2 rounded-full bg-amber-400 dot-pulse shadow shadow-amber-400"></span>
+            </div>
+
+            <!-- X-Ray Label for Camera -->
+            <div id="xrayCameraLabel" class="hidden absolute top-[35px] left-1/2 -translate-x-1/2 z-30 pointer-events-none bg-rose-500/90 text-white text-[10px] font-mono px-2 py-0.5 rounded shadow">
+              Notch Camera + Circular Progress Ring
+            </div>
+
+            <!-- Dynamic Island Pill Container -->
+            <div
+              id="dynamicIsland"
+              role="button"
+              tabindex="0"
+              aria-label="Dynamic Island — Tap to expand, swipe to dismiss"
+              style="width: 132px; height: 28px; top: 5px; border-radius: 999px;"
+              class="island-spring absolute left-1/2 -translate-x-1/2 z-20 bg-black text-white shadow-xl shadow-black/75 border border-cyan-400/35 cursor-pointer overflow-hidden flex flex-col justify-between"
+            >
+              <!-- COMPACT BAR -->
+              <div id="compactRow" class="w-full h-[28px] px-2.5 flex items-center justify-between shrink-0">
+                <!-- Left Slot -->
+                <div class="flex items-center gap-1.5">
+                  <span id="compactLeftIcon" class="w-4 h-4 rounded-full bg-cyan-500/30 border border-cyan-400/50 flex items-center justify-center text-[9px]">🧭</span>
+                  <span id="compactLeftText" class="text-[10px] font-medium text-slate-200 tracking-tight">↰ 250m</span>
+                </div>
+
+                <!-- Right Slot -->
+                <div class="flex items-center gap-1">
+                  <div id="compactEq" class="hidden eq-playing flex items-end gap-[2px] h-3.5 px-1">
+                    <span class="bar-1 w-[2.5px] bg-fuchsia-400 rounded-full h-2 transition-all"></span>
+                    <span class="bar-2 w-[2.5px] bg-indigo-400 rounded-full h-3 transition-all"></span>
+                    <span class="bar-3 w-[2.5px] bg-cyan-400 rounded-full h-1.5 transition-all"></span>
+                    <span class="bar-4 w-[2.5px] bg-fuchsia-400 rounded-full h-2.5 transition-all"></span>
+                  </div>
+                  <span id="compactRightText" class="text-[10px] font-mono font-semibold text-emerald-400">4 min</span>
+                </div>
+              </div>
+
+              <!-- EXPANDED CONTENT AREA -->
+              <div id="expandedContent" class="opacity-0 transition-opacity duration-200 px-3.5 pb-3 pt-1 flex-1 flex flex-col justify-between pointer-events-none">
+                
+                <!-- 1. MUSIC EXPANDED VIEW -->
+                <div id="musicExpandedView" class="hidden flex-col justify-between h-full gap-2">
+                  <div class="flex items-center justify-between gap-2">
+                    <div class="flex items-center gap-2.5">
+                      <div id="albumArtBox" class="w-9 h-9 rounded-xl bg-gradient-to-br from-fuchsia-500 to-indigo-600 flex items-center justify-center text-sm shadow">
+                        🎧
+                      </div>
+                      <div>
+                        <div id="songTitleText" class="text-xs font-semibold text-white leading-tight">Midnight City</div>
+                        <div id="songArtistText" class="text-[10px] text-slate-400">Pixel Synth • Playing</div>
+                      </div>
+                    </div>
+                    <span class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-fuchsia-500/15 text-fuchsia-300 border border-fuchsia-500/30">Now Playing</span>
+                  </div>
+
+                  <div class="space-y-1">
+                    <div class="w-full h-1 bg-white/15 rounded-full overflow-hidden">
+                      <div id="musicProgressBar" class="h-full bg-gradient-to-r from-fuchsia-400 to-indigo-400 rounded-full transition-all duration-300" style="width: 38%;"></div>
+                    </div>
+                    <div class="flex items-center justify-between text-[9px] font-mono text-slate-400">
+                      <span id="musicCurrentTime">01:14</span>
+                      <div class="flex items-center gap-3 text-white text-xs">
+                        <button id="prevTrackBtn" type="button" class="hover:text-fuchsia-300 px-1">⏮</button>
+                        <button id="playPauseBtn" type="button" class="w-6 h-6 rounded-full bg-white/15 hover:bg-white/25 flex items-center justify-center text-[10px]">⏸</button>
+                        <button id="nextTrackBtn" type="button" class="hover:text-fuchsia-300 px-1">⏭</button>
+                      </div>
+                      <span>03:12</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 2. TIMER EXPANDED VIEW -->
+                <div id="timerExpandedView" class="hidden flex-col justify-between h-full gap-2">
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                      <div class="w-8 h-8 rounded-full bg-amber-500/20 border border-amber-400/40 flex items-center justify-center text-amber-300 text-xs">
+                        ⏱
+                      </div>
+                      <div>
+                        <div class="text-[11px] text-amber-300 font-medium">Pixel Timer</div>
+                        <div id="timerBigDisplay" class="text-lg font-mono font-bold text-white leading-none mt-0.5">00:45</div>
+                      </div>
+                    </div>
+                    <div class="flex items-center gap-1.5">
+                      <button id="timerToggleBtn" type="button" class="px-2.5 py-1 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-semibold text-[10px] transition">
+                        Pause
+                      </button>
+                      <button id="timerAdd30Btn" type="button" class="px-2 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-white font-mono text-[10px] transition">
+                        +30s
+                      </button>
+                      <button id="timerResetBtn" type="button" class="px-2 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-slate-300 text-[10px] transition">
+                        Reset
+                      </button>
+                    </div>
+                  </div>
+                  <div class="text-[10px] text-slate-400 flex justify-between border-t border-white/10 pt-1">
+                    <span>Swipe left/right to minimize</span>
+                    <span class="text-amber-300 font-mono">Active</span>
+                  </div>
+                </div>
+
+                <!-- 3. BATTERY EXPANDED VIEW -->
+                <div id="batteryExpandedView" class="hidden flex-col justify-between h-full gap-2">
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2.5">
+                      <div id="batteryIconBadge" class="w-8 h-8 rounded-full bg-emerald-500/20 border border-emerald-400/40 flex items-center justify-center text-emerald-300 text-xs">
+                        ⚡
+                      </div>
+                      <div>
+                        <div id="batteryTitleText" class="text-xs font-semibold text-white">Fast Charging</div>
+                        <div class="text-[10px] text-slate-400">Pixel 10a • 27W USB-C PD</div>
+                      </div>
+                    </div>
+                    <span id="batteryBigPct" class="text-sm font-mono font-bold text-emerald-400">84%</span>
+                  </div>
+
+                  <div class="space-y-1.5">
+                    <div class="w-full h-2 bg-white/10 rounded-full overflow-hidden p-0.5">
+                      <div id="batteryFillBar" class="h-full bg-gradient-to-r from-emerald-500 to-teal-300 rounded-full transition-all duration-300" style="width: 84%;"></div>
+                    </div>
+                    <div class="flex items-center justify-between text-[10px] text-slate-400">
+                      <span id="batteryEtaText">~22 mins until full</span>
+                      <div class="flex gap-1.5">
+                        <button id="testLowBattBtn" type="button" class="px-1.5 py-0.5 rounded bg-rose-500/20 text-rose-300 border border-rose-500/30 text-[9px]">15% Low</button>
+                        <button id="testFastBattBtn" type="button" class="px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-[9px]">84% Charge</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 4. INCOMING / ACTIVE CALL VIEW -->
+                <div id="callExpandedView" class="hidden flex-col justify-between h-full gap-2">
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2.5">
+                      <div class="w-9 h-9 rounded-full bg-emerald-500/25 border border-emerald-400/50 flex items-center justify-center text-sm font-bold text-emerald-200">
+                        AP
+                      </div>
+                      <div>
+                        <div class="text-xs font-semibold text-white">Aarav Patel</div>
+                        <div id="callSubText" class="text-[10px] text-emerald-300">Incoming Pixel Audio Call...</div>
+                      </div>
+                    </div>
+                    <div class="flex items-center gap-2">
+                      <button id="declineCallBtn" type="button" title="Decline / Hang Up" class="w-8 h-8 rounded-full bg-rose-500 hover:bg-rose-400 text-white flex items-center justify-center text-xs font-bold shadow transition">
+                        ✕
+                      </button>
+                      <button id="acceptCallBtn" type="button" title="Accept Call" class="ring-pulse w-8 h-8 rounded-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 flex items-center justify-center text-xs font-bold shadow transition">
+                        📞
+                      </button>
+                    </div>
+                  </div>
+                  <div class="flex items-center justify-between text-[10px] text-slate-400 border-t border-white/10 pt-1">
+                    <span id="callFooterHint">Swipe island left/right to silence</span>
+                    <span id="callTimerBadge" class="font-mono text-emerald-400">Ringing</span>
+                  </div>
+                </div>
+
+                <!-- 5. INSTAGRAM DM / WHATSAPP / SMS INTERACTIVE LIKE + INLINE REPLY VIEW -->
+                <div id="msgExpandedView" class="hidden flex-col justify-between h-full gap-1.5">
+                  <div class="flex items-start justify-between gap-2">
+                    <div class="flex items-center gap-2">
+                      <div id="msgAppIconBox" class="w-7 h-7 rounded-full bg-gradient-to-tr from-amber-500 via-pink-500 to-purple-600 flex items-center justify-center text-xs shadow">
+                        📸
+                      </div>
+                      <div>
+                        <div class="flex items-center gap-1.5">
+                          <span id="msgSenderText" class="text-[11px] font-semibold text-white">@kabir_designs</span>
+                          <span id="msgPkgBadge" class="text-[8px] font-mono px-1.5 py-0.2 rounded bg-pink-500/20 text-pink-300">Instagram DM</span>
+                          <span id="msgLikedBadge" class="hidden text-[9px] bg-rose-500/25 text-rose-300 px-1.5 rounded-full">❤️ Liked</span>
+                        </div>
+                        <div id="msgBodyText" class="text-[10px] text-slate-200">"Sent you a reel! Check this UI transition 🔥"</div>
+                      </div>
+                    </div>
+                    <button id="instaLikeBtn" type="button" title="Like message right from Island" class="w-7 h-7 rounded-full bg-white/10 hover:bg-rose-500/30 border border-white/15 flex items-center justify-center text-xs transition shrink-0">
+                      🤍
+                    </button>
+                  </div>
+
+                  <div id="inlineReplyForm" class="flex items-center gap-1.5 pt-0.5">
+                    <input
+                      id="inlineReplyInput"
+                      type="text"
+                      placeholder="Reply from island..."
+                      class="flex-1 bg-white/10 border border-white/15 rounded-lg px-2 py-1 text-[10px] text-white placeholder-slate-400 focus:outline-none focus:border-pink-400"
+                    />
+                    <button id="inlineReplySendBtn" type="button" class="px-2.5 py-1 rounded-lg bg-pink-600 hover:bg-pink-500 text-white text-[10px] font-semibold transition">
+                      Send
+                    </button>
+                  </div>
+
+                  <div class="flex items-center justify-between gap-1 pt-0.5 border-t border-white/10">
+                    <button id="replyYesBtn" type="button" class="px-2 py-0.5 rounded bg-white/10 hover:bg-white/20 text-[9px] text-slate-200 transition">
+                      👍 Sounds good!
+                    </button>
+                    <button id="replyOmwBtn" type="button" class="px-2 py-0.5 rounded bg-white/10 hover:bg-white/20 text-[9px] text-slate-200 transition">
+                      🏃 On my way!
+                    </button>
+                    <button id="nextWaMsgBtn" type="button" class="px-2 py-0.5 rounded bg-white/10 hover:bg-white/20 text-[9px] text-slate-300 font-mono transition">
+                      Next ↻
+                    </button>
+                  </div>
+                </div>
+
+                <!-- 6. DOWNLOAD PROGRESS VIEW -->
+                <div id="downloadExpandedView" class="hidden flex-col justify-between h-full gap-2">
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2.5">
+                      <div class="w-8 h-8 rounded-full bg-cyan-500/20 border border-cyan-400/40 flex items-center justify-center text-cyan-300 text-xs">
+                        ⬇️
+                      </div>
+                      <div>
+                        <div id="dlFileNameText" class="text-xs font-semibold text-white">pixel_feature_drop.apk</div>
+                        <div id="dlStatusSubText" class="text-[10px] text-cyan-300">Ring around camera notch active • 18.4 MB/s</div>
+                      </div>
+                    </div>
+                    <span id="dlBigPct" class="text-sm font-mono font-bold text-cyan-400">68%</span>
+                  </div>
+
+                  <div class="space-y-1.5">
+                    <div class="w-full h-1.5 bg-white/10 rounded-full overflow-hidden">
+                      <div id="dlLinearBar" class="h-full bg-gradient-to-r from-cyan-400 to-indigo-400 rounded-full transition-all duration-200" style="width: 68%;"></div>
+                    </div>
+                    <div class="flex items-center justify-between text-[10px] text-slate-400">
+                      <span>Tap top to see ring on compact notch!</span>
+                      <div class="flex gap-1.5">
+                        <button id="dlPauseResumeBtn" type="button" class="px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-200 border border-cyan-500/30 text-[9px]">Pause DL</button>
+                        <button id="dlRestartBtn" type="button" class="px-2 py-0.5 rounded bg-white/10 text-slate-200 text-[9px]">Restart 0%</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 7. STEP 5 BONUS: GOOGLE MAPS TURN-BY-TURN NAVIGATION VIEW -->
+                <div id="mapsExpandedView" class="hidden flex-col justify-between h-full gap-2">
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2.5">
+                      <div id="mapsArrowBadge" class="w-9 h-9 rounded-xl bg-emerald-500 text-slate-950 font-bold text-base flex items-center justify-center shadow">
+                        ↰
+                      </div>
+                      <div>
+                        <div id="mapsStreetText" class="text-xs font-semibold text-white">Turn left • Dumas Road</div>
+                        <div id="mapsDistText" class="text-[10px] text-emerald-300">In 250 m • Then keep right</div>
+                      </div>
+                    </div>
+                    <span class="text-xs font-mono font-bold text-emerald-400">4 min</span>
+                  </div>
+                  <div class="flex items-center justify-between text-[10px] text-slate-400 border-t border-white/10 pt-1">
+                    <span>Google Maps • Live Nav</span>
+                    <button id="nextTurnBtn" type="button" class="px-2 py-0.5 rounded bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-200 border border-emerald-500/30 text-[9px]">
+                      Next Turn ↱
+                    </button>
+                  </div>
+                </div>
+
+                <!-- 8. STEP 5 BONUS: LIVE CRICKET SCORE TICKER VIEW -->
+                <div id="cricketExpandedView" class="hidden flex-col justify-between h-full gap-2">
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                      <div class="w-8 h-8 rounded-xl bg-indigo-500/25 border border-indigo-400/50 flex items-center justify-center text-xs">
+                        🏏
+                      </div>
+                      <div>
+                        <div class="flex items-center gap-1.5">
+                          <span class="text-xs font-bold text-white">IND vs AUS</span>
+                          <span class="text-[9px] px-1.5 rounded bg-rose-500/20 text-rose-300 font-semibold">LIVE</span>
+                        </div>
+                        <div id="cricketBatsmenText" class="text-[10px] text-slate-300">Surya 64*(31) • Hardik 28*(14)</div>
+                      </div>
+                    </div>
+                    <div class="text-right">
+                      <div id="cricketBigScore" class="text-sm font-mono font-bold text-amber-300">184/3</div>
+                      <div id="cricketOversText" class="text-[9px] font-mono text-slate-400">18.2 ov</div>
+                    </div>
+                  </div>
+                  <div class="flex items-center justify-between text-[10px] text-slate-400 border-t border-white/10 pt-1">
+                    <span id="cricketLastBallText">Last ball: • 4 1 6</span>
+                    <button id="hitSixBtn" type="button" class="px-2.5 py-0.5 rounded bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-[9px] transition">
+                      Hit 6! 🏏
+                    </button>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- Phone Screen Control & Theme Customizer Card -->
+            <div class="my-auto px-3.5 z-10 pt-14">
+              <div class="rounded-2xl bg-slate-900/85 backdrop-blur-md border border-white/10 p-3 space-y-2 shadow-xl">
+                
+                <!-- Step 4 Live Island Glow & Notch Ring Theme Picker -->
+                <div class="flex items-center justify-between bg-slate-950/80 px-2.5 py-1.5 rounded-xl border border-slate-800">
+                  <span class="text-[10px] font-semibold text-emerald-300">Step 4 Theme:</span>
+                  <div class="flex items-center gap-1.5">
+                    <button id="themeCyberBtn" title="Cyber Cyan" class="w-4 h-4 rounded-full bg-cyan-400 ring-2 ring-white transition"></button>
+                    <button id="themeWhatsappBtn" title="WhatsApp Emerald" class="w-4 h-4 rounded-full bg-[#25D366] opacity-75 hover:opacity-100 transition"></button>
+                    <button id="themeInstaBtn" title="Insta Sunset" class="w-4 h-4 rounded-full bg-pink-500 opacity-75 hover:opacity-100 transition"></button>
+                    <button id="themePixelBtn" title="Pixel Violet" class="w-4 h-4 rounded-full bg-purple-500 opacity-75 hover:opacity-100 transition"></button>
+                  </div>
+                </div>
+
+                <!-- Step 5 Bonus Widgets Row: Maps Nav, Live Cricket, Cam/Mic Privacy Dots -->
+                <div class="grid grid-cols-3 gap-1.5">
+                  <button id="simMapsNavBtn" class="px-2 py-1 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-400/50 text-emerald-200 text-[10px] font-medium flex items-center justify-center gap-1 transition">
+                    <span>🧭</span>
+                    <span>Maps Nav</span>
+                  </button>
+                  <button id="simCricketBtn" class="px-2 py-1 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 border border-amber-400/50 text-amber-200 text-[10px] font-medium flex items-center justify-center gap-1 transition">
+                    <span>🏏</span>
+                    <span>Live Score</span>
+                  </button>
+                  <button id="simPrivacyBtn" class="px-2 py-1 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 text-[10px] font-medium flex items-center justify-center gap-1 transition">
+                    <span>🟢</span>
+                    <span>Cam/Mic Dot</span>
+                  </button>
+                </div>
+
+                <!-- Background App Switcher -->
+                <div class="flex items-center justify-between bg-slate-950/70 p-1 rounded-xl border border-slate-800">
+                  <span class="text-[10px] text-slate-400 pl-1.5 font-medium">Underlying App:</span>
+                  <div class="flex gap-1">
+                    <button id="bgHomeBtn" class="px-2 py-0.5 rounded-lg bg-indigo-600 text-white text-[10px] font-medium transition">Home</button>
+                    <button id="bgBrowserBtn" class="px-2 py-0.5 rounded-lg bg-slate-800 text-slate-300 hover:text-white text-[10px] font-medium transition">Browser</button>
+                    <button id="bgMapsBtn" class="px-2 py-0.5 rounded-lg bg-slate-800 text-slate-300 hover:text-white text-[10px] font-medium transition">Maps</button>
+                  </div>
+                </div>
+
+                <!-- Smart Notification Mirror Triggers -->
+                <div class="space-y-1">
+                  <div class="flex items-center justify-between">
+                    <span class="text-[10px] font-semibold uppercase tracking-wider text-cyan-300">Smart Notification Mirror</span>
+                    <span id="gestureStatusText" class="text-[10px] text-slate-400">Swipe island to dismiss</span>
+                  </div>
+
+                  <div class="grid grid-cols-2 gap-1.5">
+                    <button id="simDownloadBtn" class="px-2.5 py-1 rounded-xl bg-cyan-500/20 hover:bg-cyan-500/30 border border-cyan-400/50 text-cyan-200 text-xs font-medium flex items-center justify-center gap-1.5 transition">
+                      <span>⬇️</span>
+                      <span class="text-[11px]">Download Ring</span>
+                    </button>
+                    <button id="simInstaBtn" class="px-2.5 py-1 rounded-xl bg-pink-500/20 hover:bg-pink-500/30 border border-pink-400/50 text-pink-200 text-xs font-medium flex items-center justify-center gap-1.5 transition">
+                      <span>📸</span>
+                      <span class="text-[11px]">Insta DM (Like)</span>
+                    </button>
+                  </div>
+
+                  <div class="grid grid-cols-3 gap-1.5">
+                    <button id="simWhatsappBtn" class="px-2 py-1 rounded-xl bg-[#25D366]/20 hover:bg-[#25D366]/30 border border-[#25D366]/50 text-emerald-200 text-xs font-medium flex flex-col items-center justify-center gap-0.5 transition">
+                      <span>🟢</span>
+                      <span class="text-[10px]">WhatsApp</span>
+                    </button>
+                    <button id="simCallBtn" class="px-2 py-1 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-500/40 text-emerald-200 text-xs font-medium flex flex-col items-center justify-center gap-0.5 transition">
+                      <span>📞</span>
+                      <span class="text-[10px]">Incoming Call</span>
+                    </button>
+                    <button id="simMsgBtn" class="px-2 py-1 rounded-xl bg-sky-500/20 hover:bg-sky-500/30 border border-sky-500/40 text-sky-200 text-xs font-medium flex flex-col items-center justify-center gap-0.5 transition">
+                      <span>💬</span>
+                      <span class="text-[10px]">New Message</span>
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Step 2 Activity Switchers -->
+                <div class="grid grid-cols-3 gap-1.5 pt-1 border-t border-white/10">
+                  <button id="modeMusicBtn" class="px-2 py-1 rounded-xl bg-slate-800/90 hover:bg-slate-700 text-slate-200 text-xs font-medium flex items-center justify-center gap-1 border border-slate-700 transition">
+                    <span>🎵</span>
+                    <span class="text-[11px]">Music</span>
+                  </button>
+                  <button id="modeTimerBtn" class="px-2 py-1 rounded-xl bg-slate-800/90 hover:bg-slate-700 text-slate-200 text-xs font-medium flex items-center justify-center gap-1 border border-slate-700 transition">
+                    <span>⏱️</span>
+                    <span class="text-[11px]">Timer</span>
+                  </button>
+                  <button id="modeBatteryBtn" class="px-2 py-1 rounded-xl bg-slate-800/90 hover:bg-slate-700 text-slate-200 text-xs font-medium flex items-center justify-center gap-1 border border-slate-700 transition">
+                    <span>⚡</span>
+                    <span class="text-[11px]">Battery</span>
+                  </button>
+                </div>
+
+                <div class="pt-0.5 flex justify-center gap-2">
+                  <button id="quickToggleBtn" class="px-3 py-1 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-medium transition">
+                    Toggle Island
+                  </button>
+                  <button id="pulseTestBtn" class="px-3 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium border border-slate-700 transition">
+                    Test Pop Bounce
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Bottom Gesture Bar -->
+            <div class="pb-2 pt-1 flex justify-center z-10">
+              <div class="w-28 h-1 rounded-full bg-white/40"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pixel 10a Alignment Calibrator Controls -->
+        <div class="mt-4 rounded-xl bg-slate-900/90 border border-slate-800 p-3.5 space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-semibold text-slate-200">Pixel 10a Cutout Alignment</span>
+            <button id="resetCalibBtn" class="text-[11px] text-indigo-400 hover:text-indigo-300">Reset Default</button>
+          </div>
+          <div class="grid grid-cols-2 gap-3 text-xs">
+            <div>
+              <div class="flex justify-between text-slate-400 mb-1">
+                <span>Compact Width</span>
+                <span id="widthVal" class="mono text-slate-200">132dp</span>
+              </div>
+              <input id="widthSlider" type="range" min="100" max="168" value="132" class="w-full accent-indigo-500 cursor-pointer" />
+            </div>
+            <div>
+              <div class="flex justify-between text-slate-400 mb-1">
+                <span>Top Y-Offset</span>
+                <span id="topVal" class="mono text-slate-200">5dp</span>
+              </div>
+              <input id="topSlider" type="range" min="2" max="14" value="5" class="w-full accent-indigo-500 cursor-pointer" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Right Column: Step 5 Bonus Widgets & Complete Android Studio Walkthrough -->
+    <section class="lg:col-span-7 flex flex-col gap-4">
+      
+      <!-- Mode Tabs -->
+      <div class="flex flex-wrap rounded-xl bg-slate-900 p-1 border border-slate-800 w-fit gap-1">
+        <button id="tabVisualBtn" class="px-3.5 py-1.5 rounded-lg text-xs font-medium bg-indigo-600 text-white transition">
+          1. How Each Part Works
+        </button>
+        <button id="tabCodeBtn" class="px-3.5 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-white transition">
+          2. Android Studio Code (Kotlin)
+        </button>
+        <button id="tabSetupBtn" class="px-3.5 py-1.5 rounded-lg text-xs font-medium text-emerald-400 hover:text-white transition">
+          3. Pixel 10a Install Guide &amp; Manifest
+        </button>
+      </div>
+
+      <!-- TAB 1: Visual Beginner Explanation -->
+      <div id="visualPanel" class="space-y-4">
+        <div class="rounded-2xl bg-slate-900/90 border border-slate-800 p-5 space-y-4">
+          <div>
+            <span class="text-xs font-semibold uppercase tracking-wider text-emerald-400">Step 5 Bonus Widgets + Full Walkthrough</span>
+            <h2 class="text-lg font-bold text-white mt-0.5">Maps Directions, Live Cricket Scores &amp; Camera/Mic Privacy Dots</h2>
+            <p class="text-xs sm:text-sm text-slate-300 mt-1 leading-relaxed">
+              We've added three everyday bonus widgets—<strong class="text-white">Google Maps Turn-by-Turn Navigation</strong>, a <strong class="text-white">Live Cricket Scoreboard</strong>, and <strong class="text-white">Camera/Mic Privacy Dots</strong>—plus your complete <strong class="text-white">Android Studio APK Installation Walkthrough</strong> in Tab 3!
+            </p>
+          </div>
+
+          <!-- 3 Interactive Building Block Cards for Step 5 -->
+          <div class="space-y-2.5">
+            <div class="text-xs font-medium text-slate-400">Click any card below to test that Step 5 widget on the phone:</div>
+
+            <!-- Part 1: Maps Turn-by-Turn -->
+            <div data-part="anchor" class="part-card cursor-pointer rounded-xl bg-slate-800/60 hover:bg-slate-800 border border-slate-700/80 p-3.5 transition">
+              <div class="flex items-start justify-between gap-2">
+                <div class="flex items-center gap-2.5">
+                  <span class="w-6 h-6 rounded-lg bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 flex items-center justify-center text-xs font-bold">1</span>
+                  <h3 class="text-sm font-semibold text-white">🧭 Google Maps Turn-by-Turn Navigation</h3>
+                </div>
+                <span class="text-[11px] font-mono text-emerald-300 bg-emerald-950/60 px-2 py-0.5 rounded">com.google.android.apps.nbu.files / maps</span>
+              </div>
+              <p class="text-xs text-slate-300 mt-2 pl-8 leading-relaxed">
+                Reads ongoing navigation notifications from Google Maps (<code class="text-emerald-300">com.google.android.apps.maps</code>) to display the next turn arrow (<code class="text-emerald-300">↰ 250m</code>) and live ETA right around the Pixel 10a camera cutout.
+              </p>
+            </div>
+
+            <!-- Part 2: Live Cricket Score Ticker -->
+            <div data-part="state" class="part-card cursor-pointer rounded-xl bg-slate-800/60 hover:bg-slate-800 border border-slate-700/80 p-3.5 transition">
+              <div class="flex items-start justify-between gap-2">
+                <div class="flex items-center gap-2.5">
+                  <span class="w-6 h-6 rounded-lg bg-amber-500/20 text-amber-300 border border-amber-500/40 flex items-center justify-center text-xs font-bold">2</span>
+                  <h3 class="text-sm font-semibold text-white">🏏 Live Sports / Cricket Score Ticker</h3>
+                </div>
+                <span class="text-[11px] font-mono text-amber-300 bg-amber-950/60 px-2 py-0.5 rounded">IND 184/3 (18.2)</span>
+              </div>
+              <p class="text-xs text-slate-300 mt-2 pl-8 leading-relaxed">
+                Keeps a pinned match score (<code class="text-amber-300">🏏 IND | 184/3</code>) in the compact pill while you browse other apps, and expands to show current batters and ball-by-ball updates when tapped!
+              </p>
+            </div>
+
+            <!-- Part 3: Step-by-Step Android Studio APK Guide -->
+            <div data-part="spring" class="part-card cursor-pointer rounded-xl bg-slate-800/60 hover:bg-slate-800 border border-slate-700/80 p-3.5 transition">
+              <div class="flex items-start justify-between gap-2">
+                <div class="flex items-center gap-2.5">
+                  <span class="w-6 h-6 rounded-lg bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 flex items-center justify-center text-xs font-bold">3</span>
+                  <h3 class="text-sm font-semibold text-white">📲 Install on Your Pixel 10a (Step-by-Step Guide)</h3>
+                </div>
+                <span class="text-[11px] font-mono text-indigo-300 bg-indigo-950/60 px-2 py-0.5 rounded">Open Install Walkthrough →</span>
+              </div>
+              <p class="text-xs text-slate-300 mt-2 pl-8 leading-relaxed">
+                Click here (or select Tab 3 above) to follow the beginner-friendly walkthrough from creating your project in Android Studio to running the finished APK on your Pixel 10a.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 2: Android Studio Jetpack Compose Code -->
+      <div id="codePanel" class="hidden space-y-4">
+        <div class="rounded-2xl bg-slate-900/90 border border-slate-800 p-5 space-y-3">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <div>
+              <span class="text-xs font-semibold uppercase tracking-wider text-cyan-400">Android Studio • Complete Kotlin Source</span>
+              <h2 class="text-base font-bold text-white">Complete Code (<code class="mono text-indigo-300">MainActivity.kt</code>)</h2>
+            </div>
+            <button id="copyCodeBtn" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-medium text-slate-200 border border-slate-700 transition">
+              Copy Kotlin Code
+            </button>
+          </div>
+          <p class="text-xs text-slate-300 leading-relaxed">
+            Paste this into <code class="mono text-slate-200">MainActivity.kt</code> in Android Studio. It includes all modes (<strong class="text-white">Download Ring, Instagram DM Like/Reply, WhatsApp, Google Maps Nav, Cricket Score, Music, Timer &amp; Calls</strong>):
+          </p>
+
+          <pre id="kotlinCodeBlock" class="mono text-[11px] leading-relaxed bg-slate-950 text-slate-200 p-4 rounded-xl border border-slate-800 overflow-x-auto max-h-[430px]"><code>package com.example.pixelisland
+
+import android.app.Notification
+import android.app.PendingIntent
+import android.app.RemoteInput
+import android.content.Context
+import android.content.Intent
+import android.os.Bundle
+import android.provider.Settings
+import android.service.notification.NotificationListenerService
+import android.service.notification.StatusBarNotification
+import android.view.HapticFeedbackConstants
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+
+enum class IslandMode { DOWNLOAD, INSTA_DM, WHATSAPP, MAPS_NAV, CRICKET, MUSIC, TIMER, BATTERY, CALL }
+
+object IslandState {
+    var mode by mutableStateOf(IslandMode.MAPS_NAV)
+    var isExpanded by mutableStateOf(false)
+    var accentColor by mutableStateOf(Color(0xFF38BDF8))
+    var sender by mutableStateOf("@kabir_designs")
+    var message by mutableStateOf("Sent you a reel 🔥")
+    var navInstruction by mutableStateOf("Turn left • Dumas Rd (250m)")
+    var downloadProgress by mutableStateOf(0.68f)
+    var likeActionIntent: PendingIntent? = null
+    var replyAction: Notification.Action? = null
+}
+
+class MainActivity : ComponentActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContent {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color(0xFF0B0F19))
+                    .padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                NotchCircularProgressRing(progress = IslandState.downloadProgress)
+                Spacer(modifier = Modifier.height(24.dp))
+                Text("Pixel 10a Dynamic Island Control Center", color = Color.White, fontSize = 18.sp)
+                Button(onClick = {
+                    startActivity(Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION))
+                }) {
+                    Text("1. Grant Overlay Permission")
+                }
+                Button(onClick = {
+                    startActivity(Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS))
+                }) {
+                    Text("2. Grant Notification Access (WhatsApp/IG/Maps)")
+                }
+            }
+        }
+    }
+}
+
+class SmartNotificationListener : NotificationListenerService() {
+    override fun onNotificationPosted(sbn: StatusBarNotification) {
+        val extras = sbn.notification.extras
+        val pkg = sbn.packageName
+
+        // 1. Circular Download Progress Ring around Pixel 10a Notch
+        val max = extras.getInt(Notification.EXTRA_PROGRESS_MAX, 0)
+        val progress = extras.getInt(Notification.EXTRA_PROGRESS, 0)
+        val indeterminate = extras.getBoolean(Notification.EXTRA_PROGRESS_INDETERMINATE, false)
+        if (max > 0 && !indeterminate) {
+            IslandState.downloadProgress = (progress.toFloat() / max.toFloat()).coerceIn(0f, 1f)
+            IslandState.mode = IslandMode.DOWNLOAD
+            return
+        }
+
+        // 2. Google Maps Live Turn-by-Turn Navigation
+        if (pkg == "com.google.android.apps.maps") {
+            val title = extras.getString(Notification.EXTRA_TITLE) ?: "Next turn ahead"
+            IslandState.navInstruction = title
+            IslandState.mode = IslandMode.MAPS_NAV
+            return
+        }
+
+        // 3. Instagram DM & WhatsApp Mirroring (Like + Inline Reply)
+        if (pkg == "com.instagram.android" || pkg == "com.whatsapp") {
+            IslandState.sender = extras.getString(Notification.EXTRA_TITLE) ?: return
+            IslandState.message = extras.getCharSequence(Notification.EXTRA_TEXT)?.toString() ?: return
+
+            sbn.notification.actions?.forEach { action ->
+                val title = action.title?.toString()?.lowercase() ?: ""
+                if (title.contains("like") || title.contains("❤")) {
+                    IslandState.likeActionIntent = action.actionIntent
+                }
+                if (!action.remoteInputs.isNullOrEmpty()) {
+                    IslandState.replyAction = action
+                }
+            }
+            IslandState.mode = if (pkg == "com.instagram.android") IslandMode.INSTA_DM else IslandMode.WHATSAPP
+            IslandState.isExpanded = true
+        }
+    }
+}
+
+fun sendInlineReply(context: Context, replyText: String) {
+    val action = IslandState.replyAction ?: return
+    val remoteInputs = action.remoteInputs ?: return
+    val intent = Intent()
+    val bundle = Bundle()
+    for (input in remoteInputs) {
+        bundle.putCharSequence(input.resultKey, replyText)
+    }
+    RemoteInput.addResultsToIntent(remoteInputs, intent, bundle)
+    action.actionIntent.send(context, 0, intent)
+    IslandState.isExpanded = false
+}
+
+@Composable
+fun NotchCircularProgressRing(progress: Float, ringColor: Color = IslandState.accentColor) {
+    val view = LocalView.current
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = Modifier
+            .size(26.dp)
+            .clickable {
+                view.performHapticFeedback(HapticFeedbackConstants.CONTEXT_CLICK)
+                IslandState.isExpanded = !IslandState.isExpanded
+            }
+    ) {
+        Canvas(modifier = Modifier.fillMaxSize()) {
+            drawArc(
+                color = ringColor.copy(alpha = 0.2f),
+                startAngle = -90f,
+                sweepAngle = 360f,
+                useCenter = false,
+                style = Stroke(width = 2.5.dp.toPx(), cap = StrokeCap.Round)
+            )
+            drawArc(
+                color = ringColor,
+                startAngle = -90f,
+                sweepAngle = 360f * progress,
+                useCenter = false,
+                style = Stroke(width = 2.5.dp.toPx(), cap = StrokeCap.Round)
+            )
+        }
+    }
+}</code></pre>
+        </div>
+      </div>
+
+      <!-- TAB 3: Pixel 10a Install Checklist & AndroidManifest.xml (NO PC NEEDED!) -->
+      <div id="setupPanel" class="hidden space-y-4">
+        <div class="rounded-2xl bg-slate-900/90 border border-slate-800 p-5 space-y-4">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <div>
+              <span class="text-xs font-semibold uppercase tracking-wider text-emerald-400">100% Phone-Only • No PC Needed!</span>
+              <h2 class="text-base font-bold text-white">How to Build &amp; Install the APK Using Only Your Pixel 10a</h2>
+            </div>
+            <div class="flex gap-2">
+              <button id="copyWorkflowBtn" class="px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-xs font-medium text-white transition">
+                Copy Cloud APK Builder (.yml)
+              </button>
+              <button id="copyManifestBtn" class="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-xs font-medium text-white transition">
+                Copy Manifest XML
+              </button>
+            </div>
+          </div>
+
+          <p class="text-xs text-slate-300 leading-relaxed">
+            You <strong class="text-white">do not need a PC or laptop</strong>! Pick whichever of these 3 phone-only methods feels easiest for you:
+          </p>
+
+          <!-- Interactive Phone-Only Checklist -->
+          <div class="space-y-2.5 text-xs">
+            <label class="flex items-start gap-2.5 p-3 rounded-xl bg-emerald-950/30 border border-emerald-500/40 cursor-pointer">
+              <input type="checkbox" class="mt-0.5 accent-emerald-500" />
+              <span class="text-slate-200">
+                <strong class="text-emerald-300">Option 1 (Easiest for Real APK — Free Cloud Build in Chrome on Your Phone):</strong><br/>
+                1. Download the <code class="mono text-emerald-300">pixel_dynamic_island_android.zip</code> file attached in chat right onto your Pixel 10a and unzip it.<br/>
+                2. Open <strong class="text-white">github.com</strong> in Chrome on your phone, create a free repository, and upload the unzipped files.<br/>
+                3. Tap the <strong class="text-white">Actions</strong> tab on GitHub—GitHub's cloud server compiles the Kotlin code for you in ~2 minutes and gives you a downloadable <strong class="text-emerald-300">app-debug.apk</strong> to tap and install!
+              </span>
+            </label>
+
+            <label class="flex items-start gap-2.5 p-3 rounded-xl bg-slate-800/60 border border-slate-700/80 cursor-pointer">
+              <input type="checkbox" class="mt-0.5 accent-emerald-500" />
+              <span class="text-slate-200">
+                <strong class="text-cyan-300">Option 2 (Compile Directly on Your Phone with AndroidIDE):</strong><br/>
+                Install the free open-source <strong class="text-white">AndroidIDE</strong> app on your Pixel 10a, open the unzipped project folder, and tap <strong class="text-white">Build ▶</strong>—it compiles the APK directly on your Pixel 10a's processor with zero PC required!
+              </span>
+            </label>
+
+            <label class="flex items-start gap-2.5 p-3 rounded-xl bg-slate-800/60 border border-slate-700/80 cursor-pointer">
+              <input type="checkbox" class="mt-0.5 accent-emerald-500" />
+              <span class="text-slate-200">
+                <strong class="text-indigo-300">Option 3 (Instant Full-Screen Mode Right Now):</strong><br/>
+                Tap the green <strong class="text-white">📱 Full-Screen Phone Mode</strong> button in the top bar above to hide all tutorial panels and use the interactive Dynamic Island full-screen on your Pixel 10a right away!
+              </span>
+            </label>
+          </div>
+
+          <div class="space-y-1.5">
+            <div class="text-xs font-semibold text-indigo-300">GitHub Actions Cloud APK Builder (<code class="mono">.github/workflows/build-apk.yml</code>):</div>
+            <pre id="workflowCodeBlock" class="mono text-[11px] leading-relaxed bg-slate-950 text-slate-200 p-3.5 rounded-xl border border-slate-800 overflow-x-auto max-h-[220px]"><code>name: Build Pixel 10a Dynamic Island APK
+on: [push, workflow_dispatch]
+jobs:
+  build-apk:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Generate Pixel 10a Dynamic Island Overlay Project
+        run: |
+          mkdir -p app/src/main/java/com/example/pixelisland
+          cat &lt;&lt; 'EOF' &gt; settings.gradle.kts
+          pluginManagement {
+              repositories { google(); mavenCentral(); gradlePluginPortal() }
+          }
+          dependencyResolutionManagement {
+              repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+              repositories { google(); mavenCentral() }
+          }
+          rootProject.name = "Pixel10aIsland"
+          include(":app")
+          EOF
+
+          cat &lt;&lt; 'EOF' &gt; build.gradle.kts
+          plugins {
+              id("com.android.application") version "8.3.2" apply false
+              id("org.jetbrains.kotlin.android") version "1.9.22" apply false
+          }
+          EOF
+
+          cat &lt;&lt; 'EOF' &gt; app/build.gradle.kts
+          plugins {
+              id("com.android.application")
+              id("org.jetbrains.kotlin.android")
+          }
+          android {
+              namespace = "com.example.pixelisland"
+              compileSdk = 34
+              defaultConfig {
+                  applicationId = "com.example.pixelisland"
+                  minSdk = 26
+                  targetSdk = 34
+                  versionCode = 1
+                  versionName = "1.0"
+              }
+              compileOptions {
+                  sourceCompatibility = JavaVersion.VERSION_17
+                  targetCompatibility = JavaVersion.VERSION_17
+              }
+              kotlinOptions {
+                  jvmTarget = "17"
+              }
+          }
+          EOF
+
+          cat &lt;&lt; 'EOF' &gt; app/src/main/AndroidManifest.xml
+          &lt;?xml version="1.0" encoding="utf-8"?&gt;
+          &lt;manifest xmlns:android="http://schemas.android.com/apk/res/android"&gt;
+              &lt;uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" /&gt;
+              &lt;application
+                  android:allowBackup="true"
+                  android:label="Pixel 10a Island"
+                  android:theme="@android:style/Theme.DeviceDefault.NoActionBar"&gt;
+                  &lt;activity
+                      android:name=".MainActivity"
+                      android:exported="true"&gt;
+                      &lt;intent-filter&gt;
+                          &lt;action android:name="android.intent.action.MAIN" /&gt;
+                          &lt;category android:name="android.intent.category.LAUNCHER" /&gt;
+                      &lt;/intent-filter&gt;
+                  &lt;/activity&gt;
+                  &lt;service
+                      android:name=".SmartNotificationListener"
+                      android:exported="true"
+                      android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE"&gt;
+                      &lt;intent-filter&gt;
+                          &lt;action android:name="android.service.notification.NotificationListenerService" /&gt;
+                      &lt;/intent-filter&gt;
+                  &lt;/service&gt;
+              &lt;/application&gt;
+          &lt;/manifest&gt;
+          EOF
+
+          cat &lt;&lt; 'EOF' &gt; app/src/main/java/com/example/pixelisland/MainActivity.kt
+          package com.example.pixelisland
+
+          import android.animation.ValueAnimator
+          import android.app.Activity
+          import android.app.Notification
+          import android.app.PendingIntent
+          import android.app.RemoteInput
+          import android.content.Context
+          import android.content.Intent
+          import android.graphics.*
+          import android.graphics.drawable.GradientDrawable
+          import android.net.Uri
+          import android.os.Bundle
+          import android.provider.Settings
+          import android.service.notification.NotificationListenerService
+          import android.service.notification.StatusBarNotification
+          import android.util.TypedValue
+          import android.view.*
+          import android.view.animation.OvershootInterpolator
+          import android.widget.*
+          import kotlin.math.abs
+
+          object IslandController {
+              var overlayView: FrameLayout? = null
+              var windowManager: WindowManager? = null
+              var layoutParams: WindowManager.LayoutParams? = null
+              var isExpanded = false
+              var compactWidthDp = 132
+              var topOffsetDp = 5
+              var downloadPct = -1
+              var titleText = "Pixel 10a Island"
+              var subText = "Tap pill to expand • Swipe to dismiss"
+              var rightBadgeText = "Active"
+              var likeIntent: PendingIntent? = null
+              var replyAction: Notification.Action? = null
+
+              fun dp(ctx: Context, v: Int): Int =
+                  TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, v.toFloat(), ctx.resources.displayMetrics).toInt()
+
+              fun showOrUpdate(ctx: Context, autoExpand: Boolean = false) {
+                  if (!Settings.canDrawOverlays(ctx)) return
+                  val appCtx = ctx.applicationContext
+                  val wm = (windowManager ?: appCtx.getSystemService(Context.WINDOW_SERVICE) as WindowManager).also { windowManager = it }
+
+                  if (autoExpand) isExpanded = true
+
+                  if (overlayView == null) {
+                      val lp = WindowManager.LayoutParams(
+                          dp(appCtx, compactWidthDp),
+                          dp(appCtx, 30),
+                          WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
+                          WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
+                              WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or
+                              WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
+                          PixelFormat.TRANSLUCENT
+                      ).apply {
+                          gravity = Gravity.TOP or Gravity.CENTER_HORIZONTAL
+                          y = dp(appCtx, topOffsetDp)
+                      }
+                      layoutParams = lp
+                      val container = createIslandView(appCtx)
+                      overlayView = container
+                      wm.addView(container, lp)
+                  }
+                  animateMorph(appCtx)
+              }
+
+              private fun createIslandView(ctx: Context): FrameLayout {
+                  val root = object : FrameLayout(ctx) {
+                      private val ringPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                          style = Paint.Style.STROKE
+                          strokeWidth = dp(ctx, 3).toFloat()
+                          strokeCap = Paint.Cap.ROUND
+                          color = Color.parseColor("#38BDF8")
+                      }
+                      override fun dispatchDraw(canvas: Canvas) {
+                          super.dispatchDraw(canvas)
+                          if (downloadPct in 0..100 && !isExpanded) {
+                              val cx = width / 2f
+                              val cy = height / 2f
+                              val r = dp(ctx, 11).toFloat()
+                              val rect = RectF(cx - r, cy - r, cx + r, cy + r)
+                              ringPaint.alpha = 60
+                              canvas.drawArc(rect, 0f, 360f, false, ringPaint)
+                              ringPaint.alpha = 255
+                              canvas.drawArc(rect, -90f, 360f * (downloadPct / 100f), false, ringPaint)
+                          }
+                      }
+                  }
+                  val bg = GradientDrawable().apply {
+                      setColor(Color.BLACK)
+                      cornerRadius = dp(ctx, 50).toFloat()
+                      setStroke(dp(ctx, 1), Color.parseColor("#3338BDF8"))
+                  }
+                  root.background = bg
+
+                  var downX = 0f
+                  var dragged = false
+                  root.setOnTouchListener { v, ev ->
+                      when (ev.actionMasked) {
+                          MotionEvent.ACTION_DOWN -> { downX = ev.rawX; dragged = false; true }
+                          MotionEvent.ACTION_MOVE -> {
+                              if (abs(ev.rawX - downX) > dp(ctx, 18)) dragged = true
+                              true
+                          }
+                          MotionEvent.ACTION_UP -> {
+                              if (dragged && isExpanded) {
+                                  isExpanded = false
+                                  animateMorph(ctx)
+                              } else if (!dragged) {
+                                  v.performHapticFeedback(HapticFeedbackConstants.CONTEXT_CLICK)
+                                  isExpanded = !isExpanded
+                                  animateMorph(ctx)
+                              }
+                              true
+                          }
+                          else -> false
+                      }
+                  }
+                  rebuildInnerContent(ctx, root)
+                  return root
+              }
+
+              private fun rebuildInnerContent(ctx: Context, root: FrameLayout) {
+                  root.removeAllViews()
+                  val col = LinearLayout(ctx).apply {
+                      orientation = LinearLayout.VERTICAL
+                      setPadding(dp(ctx, 12), dp(ctx, 5), dp(ctx, 12), dp(ctx, 8))
+                  }
+                  val topRow = LinearLayout(ctx).apply {
+                      orientation = LinearLayout.HORIZONTAL
+                      gravity = Gravity.CENTER_VERTICAL
+                  }
+                  val leftTv = TextView(ctx).apply {
+                      text = if (downloadPct in 0..100) "⬇️ DL" else "🟢 Island"
+                      setTextColor(Color.WHITE)
+                      textSize = 11f
+                      layoutParams = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f)
+                  }
+                  val rightTv = TextView(ctx).apply {
+                      text = if (downloadPct in 0..100) "${downloadPct}%" else rightBadgeText
+                      setTextColor(Color.parseColor("#38BDF8"))
+                      textSize = 11f
+                  }
+                  topRow.addView(leftTv)
+                  topRow.addView(rightTv)
+                  col.addView(topRow)
+
+                  if (isExpanded) {
+                      val titleTv = TextView(ctx).apply {
+                          text = titleText
+                          setTextColor(Color.WHITE)
+                          textSize = 14f
+                          setTypeface(typeface, Typeface.BOLD)
+                          setPadding(0, dp(ctx, 6), 0, dp(ctx, 2))
+                      }
+                      val bodyTv = TextView(ctx).apply {
+                          text = subText
+                          setTextColor(Color.LTGRAY)
+                          textSize = 12f
+                          maxLines = 2
+                      }
+                      col.addView(titleTv)
+                      col.addView(bodyTv)
+
+                      val btnRow = LinearLayout(ctx).apply {
+                          orientation = LinearLayout.HORIZONTAL
+                          setPadding(0, dp(ctx, 8), 0, 0)
+                      }
+                      val likeBtn = Button(ctx).apply {
+                          text = "❤️ Like"
+                          textSize = 10f
+                          setOnClickListener {
+                              try { likeIntent?.send() } catch (_: Exception) {}
+                              rightBadgeText = "❤️ Liked"
+                              isExpanded = false
+                              animateMorph(ctx)
+                          }
+                      }
+                      val replyBtn = Button(ctx).apply {
+                          text = "👍 Quick Reply"
+                          textSize = 10f
+                          setOnClickListener {
+                              sendQuickReply(ctx, "👍 Sounds good!")
+                              isExpanded = false
+                              animateMorph(ctx)
+                          }
+                      }
+                      btnRow.addView(likeBtn)
+                      btnRow.addView(replyBtn)
+                      col.addView(btnRow)
+                  }
+                  root.addView(col)
+                  root.invalidate()
+              }
+
+              private fun sendQuickReply(ctx: Context, msg: String) {
+                  val act = replyAction ?: return
+                  val inputs = act.remoteInputs ?: return
+                  val intent = Intent()
+                  val bundle = Bundle()
+                  for (inp in inputs) bundle.putCharSequence(inp.resultKey, msg)
+                  RemoteInput.addResultsToIntent(inputs, intent, bundle)
+                  try { act.actionIntent.send(ctx, 0, intent) } catch (_: Exception) {}
+              }
+
+              fun animateMorph(ctx: Context) {
+                  val view = overlayView ?: return
+                  val lp = layoutParams ?: return
+                  val wm = windowManager ?: return
+                  rebuildInnerContent(ctx, view)
+
+                  val startW = lp.width
+                  val startH = lp.height
+                  val endW = dp(ctx, if (isExpanded) 300 else compactWidthDp)
+                  val endH = dp(ctx, if (isExpanded) 134 else 30)
+
+                  ValueAnimator.ofFloat(0f, 1f).apply {
+                      duration = 420
+                      interpolator = OvershootInterpolator(1.15f)
+                      addUpdateListener { anim ->
+                          val f = anim.animatedValue as Float
+                          lp.width = (startW + (endW - startW) * f).toInt()
+                          lp.height = (startH + (endH - startH) * f).toInt()
+                          lp.y = dp(ctx, topOffsetDp)
+                          try { wm.updateViewLayout(view, lp) } catch (_: Exception) {}
+                      }
+                      start()
+                  }
+              }
+          }
+
+          class MainActivity : Activity() {
+              override fun onCreate(savedInstanceState: Bundle?) {
+                  super.onCreate(savedInstanceState)
+                  val root = ScrollView(this).apply { setBackgroundColor(Color.parseColor("#0B0F19")) }
+                  val col = LinearLayout(this).apply {
+                      orientation = LinearLayout.VERTICAL
+                      val p = IslandController.dp(this@MainActivity, 20)
+                      setPadding(p, p * 2, p, p)
+                  }
+
+                  val header = TextView(this).apply {
+                      text = "Pixel 10a Dynamic Island"
+                      setTextColor(Color.WHITE)
+                      textSize = 22f
+                      setTypeface(typeface, Typeface.BOLD)
+                  }
+                  val sub = TextView(this).apply {
+                      text = "Floats around your Pixel 10a camera cutout across all apps!"
+                      setTextColor(Color.LTGRAY)
+                      textSize = 13f
+                      setPadding(0, 8, 0, 32)
+                  }
+                  col.addView(header)
+                  col.addView(sub)
+
+                  fun addBtn(label: String, onClick: () -> Unit) {
+                      val b = Button(this).apply {
+                          text = label
+                          setOnClickListener { onClick() }
+                      }
+                      val lp = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                      lp.bottomMargin = 20
+                      col.addView(b, lp)
+                  }
+
+                  addBtn("1. Enable Display Over Other Apps") {
+                      startActivity(Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:$packageName")))
+                  }
+                  addBtn("2. Enable Notification Access (WhatsApp / IG / Downloads)") {
+                      startActivity(Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS))
+                  }
+                  addBtn("🚀 Start Floating Dynamic Island Now") {
+                      IslandController.showOrUpdate(this, autoExpand = false)
+                      Toast.makeText(this, "Dynamic Island active at top of screen!", Toast.LENGTH_SHORT).show()
+                  }
+                  addBtn("⬇️ Test Circular Download Ring (68%)") {
+                      IslandController.downloadPct = 68
+                      IslandController.titleText = "pixel_update.apk (68%)"
+                      IslandController.subText = "Circular ring active around camera notch"
+                      IslandController.showOrUpdate(this, autoExpand = false)
+                  }
+                  addBtn("📸 Test Instagram DM (Like + Reply)") {
+                      IslandController.downloadPct = -1
+                      IslandController.rightBadgeText = "IG"
+                      IslandController.titleText = "@kabir_designs (Instagram DM)"
+                      IslandController.subText = "Sent you a reel! Tap Like or Quick Reply 🔥"
+                      IslandController.showOrUpdate(this, autoExpand = true)
+                  }
+                  addBtn("🟢 Test WhatsApp Message Pop-Up") {
+                      IslandController.downloadPct = -1
+                      IslandController.rightBadgeText = "WA"
+                      IslandController.titleText = "Rohan (WhatsApp)"
+                      IslandController.subText = "Bro, send me the location pin for dinner 📍"
+                      IslandController.showOrUpdate(this, autoExpand = true)
+                  }
+
+                  root.addView(col)
+                  setContentView(root)
+              }
+          }
+
+          class SmartNotificationListener : NotificationListenerService() {
+              override fun onNotificationPosted(sbn: StatusBarNotification) {
+                  val extras = sbn.notification.extras
+                  val pkg = sbn.packageName
+
+                  val max = extras.getInt(Notification.EXTRA_PROGRESS_MAX, 0)
+                  val progress = extras.getInt(Notification.EXTRA_PROGRESS, 0)
+                  val ind = extras.getBoolean(Notification.EXTRA_PROGRESS_INDETERMINATE, false)
+                  if (max > 0 && !ind) {
+                      IslandController.downloadPct = ((progress.toFloat() / max.toFloat()) * 100).toInt().coerceIn(0, 100)
+                      IslandController.titleText = extras.getString(Notification.EXTRA_TITLE) ?: "Downloading..."
+                      IslandController.subText = "${IslandController.downloadPct}% complete"
+                      IslandController.showOrUpdate(applicationContext, autoExpand = false)
+                      return
+                  }
+
+                  if (pkg == "com.whatsapp" || pkg == "com.whatsapp.w4b" || pkg == "com.instagram.android" || pkg == "com.google.android.apps.maps") {
+                      val title = extras.getString(Notification.EXTRA_TITLE) ?: return
+                      val text = extras.getCharSequence(Notification.EXTRA_TEXT)?.toString() ?: return
+                      if ((sbn.notification.flags and Notification.FLAG_GROUP_SUMMARY) != 0) return
+
+                      IslandController.downloadPct = -1
+                      IslandController.titleText = title
+                      IslandController.subText = text
+                      IslandController.rightBadgeText = if (pkg.contains("whatsapp")) "WA" else if (pkg.contains("instagram")) "IG" else "Maps"
+
+                      sbn.notification.actions?.forEach { action ->
+                          val t = action.title?.toString()?.lowercase() ?: ""
+                          if (t.contains("like") || t.contains("❤")) IslandController.likeIntent = action.actionIntent
+                          if (!action.remoteInputs.isNullOrEmpty()) IslandController.replyAction = action
+                      }
+                      IslandController.showOrUpdate(applicationContext, autoExpand = true)
+                  }
+              }
+          }
+          EOF
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+        with:
+          gradle-version: '8.7'
+      - name: Build Debug APK in Cloud
+        run: gradle assembleDebug
+      - name: Upload Ready-to-Install APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: Pixel10a-Dynamic-Island-APK
+          path: app/build/outputs/apk/debug/app-debug.apk</code></pre>
+          </div>
+
+          <div class="space-y-1.5">
+            <div class="text-xs font-semibold text-emerald-300">Android Manifest (<code class="mono">app/src/main/AndroidManifest.xml</code>):</div>
+            <pre id="manifestCodeBlock" class="mono text-[11px] leading-relaxed bg-slate-950 text-slate-200 p-3.5 rounded-xl border border-slate-800 overflow-x-auto max-h-[180px]"><code>&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.pixelisland"&gt;
+
+    &lt;!-- 1. Allows the Dynamic Island pill to float over all apps --&gt;
+    &lt;uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" /&gt;
+
+    &lt;application
+        android:allowBackup="true"
+        android:label="Pixel 10a Island"
+        android:theme="@style/Theme.Material3.DayNight.NoActionBar"&gt;
+
+        &lt;activity
+            android:name=".MainActivity"
+            android:exported="true"&gt;
+            &lt;intent-filter&gt;
+                &lt;action android:name="android.intent.action.MAIN" /&gt;
+                &lt;category android:name="android.intent.category.LAUNCHER" /&gt;
+            &lt;/intent-filter&gt;
+        &lt;/activity&gt;
+
+        &lt;!-- 2. Catches WhatsApp, Instagram DMs, Maps &amp; Download Progress --&gt;
+        &lt;service
+            android:name=".SmartNotificationListener"
+            android:exported="true"
+            android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE"&gt;
+            &lt;intent-filter&gt;
+                &lt;action android:name="android.service.notification.NotificationListenerService" /&gt;
+            &lt;/intent-filter&gt;
+        &lt;/service&gt;
+
+    &lt;/application&gt;
+&lt;/manifest&gt;</code></pre>
+          </div>
+        </div>
+      </div>
+
+    </section>
+  </main>
+
+  <script>
+    // Application State
+    let isExpanded = true;
+    let isXray = false;
+    let soundEnabled = true;
+    let privacyDotsVisible = false;
+    let compactWidth = 132;
+    let topOffset = 5;
+    let currentTab = 'visual';
+    let currentMode = 'maps'; // Start in the new Step 5 Maps Nav mode!
+    let currentThemeColor = '#38bdf8';
+
+    // Web Audio API Synthesizer
+    let audioCtx = null;
+    function playPopSound(freq = 520, duration = 0.065) {
+      if (!soundEnabled) return;
+      try {
+        if (!audioCtx) {
+          const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+          if (AudioContextClass) audioCtx = new AudioContextClass();
+        }
+        if (!audioCtx) return;
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(freq * 1.35, audioCtx.currentTime + duration);
+        gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + duration);
+      } catch (e) {}
+    }
+
+    // Download Ring State
+    let dlProgress = 68;
+    let isDownloading = true;
+    const CIRCUMFERENCE = 2 * Math.PI * 11;
+
+    // Maps Navigation State (Step 5)
+    const navSteps = [
+      { arrow: '↰', compact: '↰ 250m', street: 'Turn left • Dumas Road', sub: 'In 250 m • Then keep right', eta: '4 min' },
+      { arrow: '↱', compact: '↱ 400m', street: 'Turn right • Ring Road', sub: 'In 400 m • Towards Vesu', eta: '3 min' },
+      { arrow: '↑', compact: '↑ 1.2km', street: 'Continue straight • Gaurav Path', sub: 'Destination on left in 1.2 km', eta: '1 min' }
+    ];
+    let navIndex = 0;
+
+    // Live Cricket Score State (Step 5)
+    let cricketRuns = 184;
+    let cricketWickets = 3;
+    let cricketBalls = 2; // 18.2 overs
+    let cricketOvers = 18;
+    let suryaRuns = 64;
+    let suryaBalls = 31;
+
+    // Instagram DM State
+    const instaMessages = [
+      { sender: '@kabir_designs', short: 'Kabir', text: '"Sent you a reel! Check this UI transition 🔥"', liked: false },
+      { sender: '@anya.captures', short: 'Anya', text: '"Are you coming to the Surat meetup tomorrow? 📸"', liked: false }
+    ];
+    let instaIndex = 0;
+
+    // Sample WhatsApp Messages
+    const waMessages = [
+      { sender: 'Rohan (WhatsApp)', short: 'Rohan', text: '"Bro, send me the location pin for dinner 📍"', liked: false },
+      { sender: 'Family Group (WhatsApp)', short: 'Family', text: '"Mom: Reached home safely! Call when free 💚"', liked: false },
+      { sender: 'Neha Verma (WhatsApp)', short: 'Neha', text: '"Sent you the PDF notes on WhatsApp!"', liked: false }
+    ];
+    let waIndex = 0;
+
+    // Music State
+    const tracks = [
+      { title: 'Midnight City', artist: 'Pixel Synth', icon: '🎧', duration: 192 },
+      { title: 'Starlight Drive', artist: 'Nova Pulse', icon: '🚀', duration: 215 },
+      { title: 'Solar Horizon', artist: 'Aether Wave', icon: '🌅', duration: 178 }
+    ];
+    let trackIndex = 0;
+    let isPlaying = true;
+    let musicSeconds = 74;
+
+    // Timer State
+    let timerSeconds = 45;
+    let isTimerRunning = true;
+
+    // Battery State
+    let batteryLevel = 84;
+    let isLowBattery = false;
+
+    // Call State
+    let isCallConnected = false;
+    let callSeconds = 0;
+
+    // DOM Elements
+    const phoneScreen = document.getElementById('phoneScreen');
+    const island = document.getElementById('dynamicIsland');
+    const expandedContent = document.getElementById('expandedContent');
+    const compactLeftIcon = document.getElementById('compactLeftIcon');
+    const compactLeftText = document.getElementById('compactLeftText');
+    const compactEq = document.getElementById('compactEq');
+    const compactRightText = document.getElementById('compactRightText');
+    const stateBadge = document.getElementById('stateBadge');
+    const cameraCutout = document.getElementById('cameraCutout');
+    const notchProgressSvg = document.getElementById('notchProgressSvg');
+    const notchProgressCircle = document.getElementById('notchProgressCircle');
+    const privacyDotsContainer = document.getElementById('privacyDotsContainer');
+    const xrayCameraLabel = document.getElementById('xrayCameraLabel');
+    const xrayDot = document.getElementById('xrayDot');
+    const soundToggleBtn = document.getElementById('soundToggleBtn');
+    const xrayToggleBtn = document.getElementById('xrayToggleBtn');
+    const quickToggleBtn = document.getElementById('quickToggleBtn');
+    const pulseTestBtn = document.getElementById('pulseTestBtn');
+    const widthSlider = document.getElementById('widthSlider');
+    const topSlider = document.getElementById('topSlider');
+    const widthVal = document.getElementById('widthVal');
+    const topVal = document.getElementById('topVal');
+    const resetCalibBtn = document.getElementById('resetCalibBtn');
+    const tabVisualBtn = document.getElementById('tabVisualBtn');
+    const tabCodeBtn = document.getElementById('tabCodeBtn');
+    const tabSetupBtn = document.getElementById('tabSetupBtn');
+    const viewModeBtn = document.getElementById('viewModeBtn');
+    const visualPanel = document.getElementById('visualPanel');
+    const codePanel = document.getElementById('codePanel');
+    const setupPanel = document.getElementById('setupPanel');
+    const copyCodeBtn = document.getElementById('copyCodeBtn');
+    const copyManifestBtn = document.getElementById('copyManifestBtn');
+    const partCards = document.querySelectorAll('.part-card');
+    const gestureStatusText = document.getElementById('gestureStatusText');
+
+    // Theme Picker Buttons
+    const themeCyberBtn = document.getElementById('themeCyberBtn');
+    const themeWhatsappBtn = document.getElementById('themeWhatsappBtn');
+    const themeInstaBtn = document.getElementById('themeInstaBtn');
+    const themePixelBtn = document.getElementById('themePixelBtn');
+
+    // Step 5 Bonus Widget Buttons
+    const simMapsNavBtn = document.getElementById('simMapsNavBtn');
+    const simCricketBtn = document.getElementById('simCricketBtn');
+    const simPrivacyBtn = document.getElementById('simPrivacyBtn');
+    const nextTurnBtn = document.getElementById('nextTurnBtn');
+    const hitSixBtn = document.getElementById('hitSixBtn');
+
+    // Mode Buttons
+    const modeMusicBtn = document.getElementById('modeMusicBtn');
+    const modeTimerBtn = document.getElementById('modeTimerBtn');
+    const modeBatteryBtn = document.getElementById('modeBatteryBtn');
+    const simDownloadBtn = document.getElementById('simDownloadBtn');
+    const simInstaBtn = document.getElementById('simInstaBtn');
+    const simWhatsappBtn = document.getElementById('simWhatsappBtn');
+    const simCallBtn = document.getElementById('simCallBtn');
+    const simMsgBtn = document.getElementById('simMsgBtn');
+
+    // Underlying App Background Switchers
+    const bgHomeBtn = document.getElementById('bgHomeBtn');
+    const bgBrowserBtn = document.getElementById('bgBrowserBtn');
+    const bgMapsBtn = document.getElementById('bgMapsBtn');
+
+    // Expanded Views
+    const musicExpandedView = document.getElementById('musicExpandedView');
+    const timerExpandedView = document.getElementById('timerExpandedView');
+    const batteryExpandedView = document.getElementById('batteryExpandedView');
+    const callExpandedView = document.getElementById('callExpandedView');
+    const msgExpandedView = document.getElementById('msgExpandedView');
+    const downloadExpandedView = document.getElementById('downloadExpandedView');
+    const mapsExpandedView = document.getElementById('mapsExpandedView');
+    const cricketExpandedView = document.getElementById('cricketExpandedView');
+
+    // Maps & Cricket Elements
+    const mapsArrowBadge = document.getElementById('mapsArrowBadge');
+    const mapsStreetText = document.getElementById('mapsStreetText');
+    const mapsDistText = document.getElementById('mapsDistText');
+    const cricketBatsmenText = document.getElementById('cricketBatsmenText');
+    const cricketBigScore = document.getElementById('cricketBigScore');
+    const cricketOversText = document.getElementById('cricketOversText');
+
+    // Download Controls
+    const dlStatusSubText = document.getElementById('dlStatusSubText');
+    const dlBigPct = document.getElementById('dlBigPct');
+    const dlLinearBar = document.getElementById('dlLinearBar');
+    const dlPauseResumeBtn = document.getElementById('dlPauseResumeBtn');
+    const dlRestartBtn = document.getElementById('dlRestartBtn');
+
+    // Music Controls
+    const albumArtBox = document.getElementById('albumArtBox');
+    const songTitleText = document.getElementById('songTitleText');
+    const songArtistText = document.getElementById('songArtistText');
+    const musicProgressBar = document.getElementById('musicProgressBar');
+    const musicCurrentTime = document.getElementById('musicCurrentTime');
+    const prevTrackBtn = document.getElementById('prevTrackBtn');
+    const playPauseBtn = document.getElementById('playPauseBtn');
+    const nextTrackBtn = document.getElementById('nextTrackBtn');
+
+    // Timer Controls
+    const timerBigDisplay = document.getElementById('timerBigDisplay');
+    const timerToggleBtn = document.getElementById('timerToggleBtn');
+    const timerAdd30Btn = document.getElementById('timerAdd30Btn');
+    const timerResetBtn = document.getElementById('timerResetBtn');
+
+    // Battery Controls
+    const batteryTitleText = document.getElementById('batteryTitleText');
+    const batteryBigPct = document.getElementById('batteryBigPct');
+    const batteryFillBar = document.getElementById('batteryFillBar');
+    const batteryEtaText = document.getElementById('batteryEtaText');
+    const testLowBattBtn = document.getElementById('testLowBattBtn');
+    const testFastBattBtn = document.getElementById('testFastBattBtn');
+
+    // Call & Message/Insta/WhatsApp Controls
+    const callSubText = document.getElementById('callSubText');
+    const callFooterHint = document.getElementById('callFooterHint');
+    const callTimerBadge = document.getElementById('callTimerBadge');
+    const acceptCallBtn = document.getElementById('acceptCallBtn');
+    const declineCallBtn = document.getElementById('declineCallBtn');
+    const msgAppIconBox = document.getElementById('msgAppIconBox');
+    const msgSenderText = document.getElementById('msgSenderText');
+    const msgPkgBadge = document.getElementById('msgPkgBadge');
+    const msgLikedBadge = document.getElementById('msgLikedBadge');
+    const msgBodyText = document.getElementById('msgBodyText');
+    const instaLikeBtn = document.getElementById('instaLikeBtn');
+    const inlineReplyInput = document.getElementById('inlineReplyInput');
+    const inlineReplySendBtn = document.getElementById('inlineReplySendBtn');
+    const replyYesBtn = document.getElementById('replyYesBtn');
+    const replyOmwBtn = document.getElementById('replyOmwBtn');
+    const nextWaMsgBtn = document.getElementById('nextWaMsgBtn');
+
+    function formatTime(sec) {
+      const m = Math.floor(sec / 60).toString().padStart(2, '0');
+      const s = (sec % 60).toString().padStart(2, '0');
+      return `${m}:${s}`;
+    }
+
+    function updateNotchRing(pct, visible) {
+      if (!visible) {
+        notchProgressSvg.classList.add('hidden');
+        return;
+      }
+      notchProgressSvg.classList.remove('hidden');
+      const offset = CIRCUMFERENCE - (pct / 100) * CIRCUMFERENCE;
+      notchProgressCircle.style.strokeDashoffset = offset.toFixed(2);
+      notchProgressCircle.style.stroke = pct >= 100 ? '#34d399' : currentThemeColor;
+    }
+
+    function applyThemeColor(hex) {
+      currentThemeColor = hex;
+      island.style.borderColor = hex + '66';
+      island.style.boxShadow = `0 10px 28px -6px ${hex}33, 0 8px 16px -6px rgba(0,0,0,0.8)`;
+      renderIsland();
+    }
+
+    function renderIsland() {
+      island.style.top = topOffset + 'px';
+
+      const activeClass = 'px-2 py-1 rounded-xl bg-indigo-600 text-white text-xs font-medium flex items-center justify-center gap-1 border border-indigo-400/40 transition';
+      const inactiveClass = 'px-2 py-1 rounded-xl bg-slate-800/90 hover:bg-slate-700 text-slate-200 text-xs font-medium flex items-center justify-center gap-1 border border-slate-700 transition';
+      modeMusicBtn.className = currentMode === 'music' ? activeClass : inactiveClass;
+      modeTimerBtn.className = currentMode === 'timer' ? activeClass : inactiveClass;
+      modeBatteryBtn.className = currentMode === 'battery' ? activeClass : inactiveClass;
+
+      [musicExpandedView, timerExpandedView, batteryExpandedView, callExpandedView, msgExpandedView, downloadExpandedView, mapsExpandedView, cricketExpandedView].forEach((v) => {
+        v.classList.add('hidden');
+        v.classList.remove('flex');
+      });
+
+      updateNotchRing(dlProgress, currentMode === 'download');
+
+      if (privacyDotsVisible) {
+        privacyDotsContainer.classList.remove('hidden');
+      } else {
+        privacyDotsContainer.classList.add('hidden');
+      }
+
+      if (currentMode === 'maps') {
+        const nav = navSteps[navIndex];
+        compactLeftIcon.textContent = '🧭';
+        compactLeftIcon.className = 'w-4 h-4 rounded-full bg-emerald-500/30 border border-emerald-400/50 flex items-center justify-center text-[9px]';
+        compactLeftText.textContent = nav.compact;
+        compactEq.classList.add('hidden');
+        compactRightText.classList.remove('hidden');
+        compactRightText.textContent = nav.eta;
+        compactRightText.className = 'text-[10px] font-mono font-semibold text-emerald-400';
+
+        mapsArrowBadge.textContent = nav.arrow;
+        mapsStreetText.textContent = nav.street;
+        mapsDistText.textContent = nav.sub;
+
+        mapsExpandedView.classList.remove('hidden');
+        mapsExpandedView.classList.add('flex');
+      } else if (currentMode === 'cricket') {
+        compactLeftIcon.textContent = '🏏';
+        compactLeftIcon.className = 'w-4 h-4 rounded-full bg-amber-500/30 border border-amber-400/50 flex items-center justify-center text-[9px]';
+        compactLeftText.textContent = 'IND';
+        compactEq.classList.add('hidden');
+        compactRightText.classList.remove('hidden');
+        compactRightText.textContent = `${cricketRuns}/${cricketWickets}`;
+        compactRightText.className = 'text-[10px] font-mono font-semibold text-amber-300';
+
+        cricketBigScore.textContent = `${cricketRuns}/${cricketWickets}`;
+        cricketOversText.textContent = `${cricketOvers}.${cricketBalls} ov`;
+        cricketBatsmenText.textContent = `Surya ${suryaRuns}*(${suryaBalls}) • Hardik 28*(14)`;
+
+        cricketExpandedView.classList.remove('hidden');
+        cricketExpandedView.classList.add('flex');
+      } else if (currentMode === 'download') {
+        compactLeftIcon.textContent = dlProgress >= 100 ? '✅' : '⬇️';
+        compactLeftIcon.className = 'w-4 h-4 rounded-full bg-cyan-500/30 border border-cyan-400/50 flex items-center justify-center text-[9px]';
+        compactLeftText.textContent = dlProgress >= 100 ? 'Done' : 'DL';
+        compactEq.classList.add('hidden');
+        compactRightText.classList.remove('hidden');
+        compactRightText.textContent = dlProgress + '%';
+        compactRightText.className = dlProgress >= 100
+          ? 'text-[10px] font-mono font-semibold text-emerald-400'
+          : 'text-[10px] font-mono font-semibold text-cyan-400';
+
+        dlBigPct.textContent = dlProgress + '%';
+        dlLinearBar.style.width = dlProgress + '%';
+        dlStatusSubText.textContent = dlProgress >= 100
+          ? 'Download Complete • Notch ring 100%'
+          : (isDownloading ? 'Ring around camera notch active • 18.4 MB/s' : 'Download Paused');
+        dlPauseResumeBtn.textContent = isDownloading ? 'Pause DL' : 'Resume DL';
+
+        downloadExpandedView.classList.remove('hidden');
+        downloadExpandedView.classList.add('flex');
+      } else if (currentMode === 'insta') {
+        const dm = instaMessages[instaIndex];
+        compactLeftIcon.textContent = '📸';
+        compactLeftIcon.className = 'w-4 h-4 rounded-full bg-gradient-to-tr from-amber-500 via-pink-500 to-purple-600 flex items-center justify-center text-[9px]';
+        compactLeftText.textContent = 'IG';
+        compactEq.classList.add('hidden');
+        compactRightText.classList.remove('hidden');
+        compactRightText.textContent = dm.liked ? '❤️' : dm.short;
+        compactRightText.className = 'text-[10px] font-mono font-semibold text-pink-400';
+
+        msgAppIconBox.textContent = '📸';
+        msgAppIconBox.className = 'w-7 h-7 rounded-full bg-gradient-to-tr from-amber-500 via-pink-500 to-purple-600 flex items-center justify-center text-xs shadow';
+        msgSenderText.textContent = dm.sender;
+        msgPkgBadge.textContent = 'Instagram DM';
+        msgPkgBadge.className = 'text-[8px] font-mono px-1.5 py-0.2 rounded bg-pink-500/20 text-pink-300';
+        instaLikeBtn.textContent = dm.liked ? '❤️' : '🤍';
+        if (dm.liked) msgLikedBadge.classList.remove('hidden');
+        else msgLikedBadge.classList.add('hidden');
+        inlineReplyInput.placeholder = `Reply to ${dm.sender}...`;
+        nextWaMsgBtn.classList.remove('hidden');
+
+        msgExpandedView.classList.remove('hidden');
+        msgExpandedView.classList.add('flex');
+      } else if (currentMode === 'whatsapp') {
+        const wa = waMessages[waIndex];
+        compactLeftIcon.textContent = '🟢';
+        compactLeftIcon.className = 'w-4 h-4 rounded-full bg-[#25D366]/30 border border-[#25D366]/60 flex items-center justify-center text-[9px]';
+        compactLeftText.textContent = 'WA';
+        compactEq.classList.add('hidden');
+        compactRightText.classList.remove('hidden');
+        compactRightText.textContent = wa.liked ? '❤️' : wa.short;
+        compactRightText.className = 'text-[10px] font-mono font-semibold text-[#4ade80]';
+
+        msgAppIconBox.textContent = '🟢';
+        msgAppIconBox.className = 'w-7 h-7 rounded-full bg-[#25D366]/25 border border-[#25D366]/60 flex items-center justify-center text-xs';
+        msgSenderText.textContent = wa.sender;
+        msgPkgBadge.textContent = 'com.whatsapp';
+        msgPkgBadge.className = 'text-[8px] font-mono px-1.5 py-0.2 rounded bg-[#25D366]/20 text-[#4ade80]';
+        instaLikeBtn.textContent = wa.liked ? '❤️' : '🤍';
+        if (wa.liked) msgLikedBadge.classList.remove('hidden');
+        else msgLikedBadge.classList.add('hidden');
+        inlineReplyInput.placeholder = `WhatsApp reply to ${wa.short}...`;
+        nextWaMsgBtn.classList.remove('hidden');
+
+        msgExpandedView.classList.remove('hidden');
+        msgExpandedView.classList.add('flex');
+      } else if (currentMode === 'message') {
+        compactLeftIcon.textContent = '💬';
+        compactLeftIcon.className = 'w-4 h-4 rounded-full bg-sky-500/30 border border-sky-400/50 flex items-center justify-center text-[9px]';
+        compactLeftText.textContent = 'Priya';
+        compactEq.classList.add('hidden');
+        compactRightText.classList.remove('hidden');
+        compactRightText.textContent = 'SMS';
+        compactRightText.className = 'text-[10px] font-mono font-semibold text-sky-400';
+
+        msgAppIconBox.textContent = '💬';
+        msgAppIconBox.className = 'w-7 h-7 rounded-full bg-sky-500/25 border border-sky-400/50 flex items-center justify-center text-xs';
+        msgSenderText.textContent = 'Priya Sharma';
+        msgPkgBadge.textContent = 'Google Messages';
+        msgPkgBadge.className = 'text-[8px] font-mono px-1.5 py-0.2 rounded bg-sky-500/20 text-sky-300';
+        msgLikedBadge.classList.add('hidden');
+        inlineReplyInput.placeholder = 'Reply via SMS...';
+        nextWaMsgBtn.classList.add('hidden');
+
+        msgExpandedView.classList.remove('hidden');
+        msgExpandedView.classList.add('flex');
+      } else if (currentMode === 'music') {
+        const track = tracks[trackIndex];
+        compactLeftIcon.textContent = track.icon;
+        compactLeftIcon.className = 'w-4 h-4 rounded-full bg-fuchsia-500/30 border border-fuchsia-400/50 flex items-center justify-center text-[9px]';
+        compactLeftText.textContent = 'Synth';
+        compactEq.classList.remove('hidden');
+        compactRightText.classList.add('hidden');
+        if (isPlaying) compactEq.classList.add('eq-playing');
+        else compactEq.classList.remove('eq-playing');
+
+        albumArtBox.textContent = track.icon;
+        songTitleText.textContent = track.title;
+        songArtistText.textContent = `${track.artist} • ${isPlaying ? 'Playing' : 'Paused'}`;
+        playPauseBtn.textContent = isPlaying ? '⏸' : '▶';
+        const pct = Math.min(100, Math.round((musicSeconds / track.duration) * 100));
+        musicProgressBar.style.width = pct + '%';
+        musicCurrentTime.textContent = formatTime(musicSeconds);
+
+        musicExpandedView.classList.remove('hidden');
+        musicExpandedView.classList.add('flex');
+      } else if (currentMode === 'timer') {
+        compactLeftIcon.textContent = '⏱';
+        compactLeftIcon.className = 'w-4 h-4 rounded-full bg-amber-500/30 border border-amber-400/50 flex items-center justify-center text-[9px]';
+        compactLeftText.textContent = 'Timer';
+        compactEq.classList.add('hidden');
+        compactRightText.classList.remove('hidden');
+        compactRightText.textContent = formatTime(timerSeconds);
+        compactRightText.className = 'text-[10px] font-mono font-semibold text-amber-400';
+
+        timerBigDisplay.textContent = formatTime(timerSeconds);
+        timerToggleBtn.textContent = isTimerRunning ? 'Pause' : 'Resume';
+
+        timerExpandedView.classList.remove('hidden');
+        timerExpandedView.classList.add('flex');
+      } else if (currentMode === 'battery') {
+        compactLeftIcon.textContent = isLowBattery ? '⚠️' : '⚡';
+        compactLeftIcon.className = isLowBattery
+          ? 'w-4 h-4 rounded-full bg-rose-500/30 border border-rose-400/50 flex items-center justify-center text-[9px]'
+          : 'w-4 h-4 rounded-full bg-emerald-500/30 border border-emerald-400/50 flex items-center justify-center text-[9px]';
+        compactLeftText.textContent = isLowBattery ? 'Low' : 'Charge';
+        compactEq.classList.add('hidden');
+        compactRightText.classList.remove('hidden');
+        compactRightText.textContent = batteryLevel + '%';
+        compactRightText.className = isLowBattery
+          ? 'text-[10px] font-mono font-semibold text-rose-400'
+          : 'text-[10px] font-mono font-semibold text-emerald-400';
+
+        batteryTitleText.textContent = isLowBattery ? 'Low Battery Warning' : 'Fast Charging';
+        batteryBigPct.textContent = batteryLevel + '%';
+        batteryBigPct.className = isLowBattery
+          ? 'text-sm font-mono font-bold text-rose-400'
+          : 'text-sm font-mono font-bold text-emerald-400';
+        batteryFillBar.style.width = batteryLevel + '%';
+        batteryFillBar.className = isLowBattery
+          ? 'h-full bg-gradient-to-r from-rose-500 to-amber-400 rounded-full transition-all duration-300'
+          : 'h-full bg-gradient-to-r from-emerald-500 to-teal-300 rounded-full transition-all duration-300';
+        batteryEtaText.textContent = isLowBattery ? 'Plug in Pixel 10a charger soon' : '~22 mins until full';
+
+        batteryExpandedView.classList.remove('hidden');
+        batteryExpandedView.classList.add('flex');
+      } else if (currentMode === 'call') {
+        compactLeftIcon.textContent = '📞';
+        compactLeftIcon.className = 'w-4 h-4 rounded-full bg-emerald-500/30 border border-emerald-400/50 flex items-center justify-center text-[9px]';
+        compactLeftText.textContent = isCallConnected ? 'Call' : 'Ring';
+        compactEq.classList.add('hidden');
+        compactRightText.classList.remove('hidden');
+        compactRightText.textContent = isCallConnected ? formatTime(callSeconds) : 'Aarav';
+        compactRightText.className = 'text-[10px] font-mono font-semibold text-emerald-400';
+
+        if (isCallConnected) {
+          callSubText.textContent = 'Connected • HD Voice';
+          callTimerBadge.textContent = formatTime(callSeconds);
+          callFooterHint.textContent = 'Swipe island to keep call in pill';
+          acceptCallBtn.classList.add('hidden');
+        } else {
+          callSubText.textContent = 'Incoming Pixel Audio Call...';
+          callTimerBadge.textContent = 'Ringing';
+          callFooterHint.textContent = 'Swipe island left/right to silence';
+          acceptCallBtn.classList.remove('hidden');
+        }
+
+        callExpandedView.classList.remove('hidden');
+        callExpandedView.classList.add('flex');
+      }
+
+      if (isExpanded) {
+        const isMsgLike = currentMode === 'insta' || currentMode === 'whatsapp' || currentMode === 'message';
+        const targetHeight = isMsgLike ? '144px' : (currentMode === 'music' ? '132px' : '118px');
+        island.style.width = '300px';
+        island.style.height = targetHeight;
+        island.style.borderRadius = '28px';
+        expandedContent.classList.remove('opacity-0', 'pointer-events-none');
+        expandedContent.classList.add('opacity-100');
+        stateBadge.textContent = `mode = ${currentMode.toUpperCase()} • expanded`;
+        stateBadge.className = 'font-mono text-emerald-300 bg-emerald-950/80 border border-emerald-800/60 px-2 py-0.5 rounded';
+      } else {
+        island.style.width = compactWidth + 'px';
+        island.style.height = '28px';
+        island.style.borderRadius = '999px';
+        expandedContent.classList.add('opacity-0', 'pointer-events-none');
+        expandedContent.classList.remove('opacity-100');
+        stateBadge.textContent = `mode = ${currentMode.toUpperCase()} • ${currentMode === 'download' ? 'notch-ring' : 'compact'}`;
+        stateBadge.className = 'font-mono text-cyan-300 bg-cyan-950/80 border border-cyan-800/60 px-2 py-0.5 rounded';
+      }
+
+      if (isXray) {
+        island.classList.add('xray-outline');
+        cameraCutout.classList.add('camera-xray');
+        xrayCameraLabel.classList.remove('hidden');
+        xrayDot.className = 'w-2 h-2 rounded-full bg-sky-400';
+      } else {
+        island.classList.remove('xray-outline');
+        cameraCutout.classList.remove('camera-xray');
+        xrayCameraLabel.classList.add('hidden');
+        xrayDot.className = 'w-2 h-2 rounded-full bg-slate-500';
+      }
+    }
+
+    function toggleIsland() {
+      isExpanded = !isExpanded;
+      playPopSound(isExpanded ? 540 : 410);
+      renderIsland();
+    }
+
+    function triggerPopBounce() {
+      playPopSound(600);
+      island.style.transform = 'translateX(-50%) scale(1.08)';
+      setTimeout(() => {
+        island.style.transform = 'translateX(-50%) scale(1)';
+      }, 220);
+    }
+
+    function setMode(newMode, autoExpand = false) {
+      currentMode = newMode;
+      isExpanded = autoExpand;
+      triggerPopBounce();
+      renderIsland();
+    }
+
+    function switchTab(tab) {
+      currentTab = tab;
+      visualPanel.classList.add('hidden');
+      codePanel.classList.add('hidden');
+      setupPanel.classList.add('hidden');
+
+      const activeTabClass = 'px-3.5 py-1.5 rounded-lg text-xs font-medium bg-indigo-600 text-white transition';
+      const inactiveTabClass = 'px-3.5 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-white transition';
+
+      tabVisualBtn.className = tab === 'visual' ? activeTabClass : inactiveTabClass;
+      tabCodeBtn.className = tab === 'code' ? activeTabClass : inactiveTabClass;
+      tabSetupBtn.className = tab === 'setup' ? activeTabClass : 'px-3.5 py-1.5 rounded-lg text-xs font-medium text-emerald-400 hover:text-white transition';
+
+      if (tab === 'visual') {
+        visualPanel.classList.remove('hidden');
+        viewModeBtn.textContent = 'View Android Code';
+      } else if (tab === 'code') {
+        codePanel.classList.remove('hidden');
+        viewModeBtn.textContent = 'View Visual Guide';
+      } else {
+        setupPanel.classList.remove('hidden');
+        viewModeBtn.textContent = 'View Visual Guide';
+      }
+    }
+
+    // Background ticker
+    setInterval(() => {
+      let changed = false;
+      if (isDownloading && currentMode === 'download') {
+        dlProgress = dlProgress >= 100 ? 0 : dlProgress + 4;
+        changed = true;
+      }
+      if (isPlaying) {
+        const track = tracks[trackIndex];
+        musicSeconds = (musicSeconds + 1) % track.duration;
+        if (currentMode === 'music' && isExpanded) changed = true;
+      }
+      if (isTimerRunning && timerSeconds > 0) {
+        timerSeconds -= 1;
+        if (currentMode === 'timer') changed = true;
+      }
+      if (isCallConnected) {
+        callSeconds += 1;
+        if (currentMode === 'call') changed = true;
+      }
+      if (changed) renderIsland();
+    }, 600);
+
+    // Pointer / Swipe-to-Dismiss Gesture on Dynamic Island
+    let dragStartX = null;
+    let currentDragX = 0;
+    let wasDragged = false;
+
+    island.addEventListener('pointerdown', (e) => {
+      if (e.target.closest('button') || e.target.closest('input')) return;
+      dragStartX = e.clientX;
+      currentDragX = 0;
+      wasDragged = false;
+    });
+
+    window.addEventListener('pointermove', (e) => {
+      if (dragStartX === null) return;
+      currentDragX = e.clientX - dragStartX;
+      if (Math.abs(currentDragX) > 8) {
+        wasDragged = true;
+        const clamped = Math.max(-60, Math.min(60, currentDragX));
+        island.style.transform = `translateX(calc(-50% + ${clamped}px)) scale(0.98)`;
+      }
+    });
+
+    window.addEventListener('pointerup', () => {
+      if (dragStartX === null) return;
+      if (Math.abs(currentDragX) > 40 && isExpanded) {
+        isExpanded = false;
+        playPopSound(380);
+        gestureStatusText.textContent = '✨ Swiped to dismiss!';
+        setTimeout(() => {
+          gestureStatusText.textContent = 'Swipe island to dismiss';
+        }, 1800);
+      }
+      island.style.transform = 'translateX(-50%) scale(1)';
+      dragStartX = null;
+      renderIsland();
+    });
+
+    island.addEventListener('click', (e) => {
+      if (e.target.closest('input') || e.target.closest('button')) return;
+      if (wasDragged) {
+        wasDragged = false;
+        return;
+      }
+      toggleIsland();
+    });
+
+    island.addEventListener('keydown', (e) => {
+      if (e.target.closest('input')) return;
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        toggleIsland();
+      }
+    });
+
+    inlineReplyInput.addEventListener('click', (e) => e.stopPropagation());
+    inlineReplyInput.addEventListener('keydown', (e) => {
+      e.stopPropagation();
+      if (e.key === 'Enter' && inlineReplyInput.value.trim()) {
+        sendQuickReply(inlineReplyInput.value.trim());
+        inlineReplyInput.value = '';
+      }
+    });
+
+    // Sound Toggle Listener
+    soundToggleBtn.addEventListener('click', () => {
+      soundEnabled = !soundEnabled;
+      soundToggleBtn.textContent = soundEnabled ? '🔊 Sound: ON' : '🔇 Sound: OFF';
+      soundToggleBtn.className = soundEnabled
+        ? 'px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-800 hover:bg-slate-700 text-emerald-300 border border-slate-700 transition'
+        : 'px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-800 hover:bg-slate-700 text-slate-400 border border-slate-700 transition';
+      if (soundEnabled) playPopSound(660);
+    });
+
+    // Step 5 Bonus Widget Listeners
+    simMapsNavBtn.addEventListener('click', () => {
+      setUnderlyingApp('maps');
+      setMode('maps', true);
+    });
+
+    nextTurnBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      playPopSound(620);
+      navIndex = (navIndex + 1) % navSteps.length;
+      renderIsland();
+    });
+
+    simCricketBtn.addEventListener('click', () => {
+      setMode('cricket', true);
+    });
+
+    hitSixBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      playPopSound(780);
+      cricketRuns += 6;
+      suryaRuns += 6;
+      suryaBalls += 1;
+      cricketBalls += 1;
+      if (cricketBalls >= 6) {
+        cricketBalls = 0;
+        cricketOvers += 1;
+      }
+      renderIsland();
+    });
+
+    simPrivacyBtn.addEventListener('click', () => {
+      privacyDotsVisible = !privacyDotsVisible;
+      playPopSound(privacyDotsVisible ? 700 : 440);
+      simPrivacyBtn.className = privacyDotsVisible
+        ? 'px-2 py-1 rounded-xl bg-emerald-500/25 border border-emerald-400 text-emerald-200 text-[10px] font-medium flex items-center justify-center gap-1 transition'
+        : 'px-2 py-1 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 text-[10px] font-medium flex items-center justify-center gap-1 transition';
+      renderIsland();
+    });
+
+    // Theme Picker Listeners
+    function selectThemeDot(activeBtn, hex) {
+      [themeCyberBtn, themeWhatsappBtn, themeInstaBtn, themePixelBtn].forEach((b) => {
+        b.classList.remove('ring-2', 'ring-white', 'opacity-100');
+        b.classList.add('opacity-75');
+      });
+      activeBtn.classList.remove('opacity-75');
+      activeBtn.classList.add('ring-2', 'ring-white', 'opacity-100');
+      playPopSound(680);
+      applyThemeColor(hex);
+    }
+
+    themeCyberBtn.addEventListener('click', () => selectThemeDot(themeCyberBtn, '#38bdf8'));
+    themeWhatsappBtn.addEventListener('click', () => selectThemeDot(themeWhatsappBtn, '#25D366'));
+    themeInstaBtn.addEventListener('click', () => selectThemeDot(themeInstaBtn, '#ec4899'));
+    themePixelBtn.addEventListener('click', () => selectThemeDot(themePixelBtn, '#a855f7'));
+
+    // Download Listeners
+    simDownloadBtn.addEventListener('click', () => {
+      isDownloading = true;
+      if (dlProgress >= 100) dlProgress = 12;
+      setMode('download', false);
+    });
+    dlPauseResumeBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      isDownloading = !isDownloading;
+      renderIsland();
+    });
+    dlRestartBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      dlProgress = 0;
+      isDownloading = true;
+      renderIsland();
+    });
+
+    // Instagram DM & Like Button Listeners
+    simInstaBtn.addEventListener('click', () => {
+      msgBodyText.textContent = instaMessages[instaIndex].text;
+      setMode('insta', true);
+    });
+
+    instaLikeBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      playPopSound(740);
+      instaLikeBtn.classList.remove('heart-pop');
+      void instaLikeBtn.offsetWidth;
+      instaLikeBtn.classList.add('heart-pop');
+
+      if (currentMode === 'insta') {
+        instaMessages[instaIndex].liked = !instaMessages[instaIndex].liked;
+      } else if (currentMode === 'whatsapp') {
+        waMessages[waIndex].liked = !waMessages[waIndex].liked;
+      }
+      renderIsland();
+    });
+
+    inlineReplySendBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const val = inlineReplyInput.value.trim() || '🔥 Love this!';
+      inlineReplyInput.value = '';
+      sendQuickReply(val);
+    });
+
+    // Music Button Listeners
+    prevTrackBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      trackIndex = (trackIndex - 1 + tracks.length) % tracks.length;
+      musicSeconds = 0;
+      renderIsland();
+    });
+    playPauseBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      isPlaying = !isPlaying;
+      renderIsland();
+    });
+    nextTrackBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      trackIndex = (trackIndex + 1) % tracks.length;
+      musicSeconds = 0;
+      renderIsland();
+    });
+
+    // Timer Button Listeners
+    timerToggleBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      isTimerRunning = !isTimerRunning;
+      renderIsland();
+    });
+    timerAdd30Btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      timerSeconds += 30;
+      renderIsland();
+    });
+    timerResetBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      timerSeconds = 45;
+      isTimerRunning = true;
+      renderIsland();
+    });
+
+    // Battery Button Listeners
+    testLowBattBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      batteryLevel = 15;
+      isLowBattery = true;
+      renderIsland();
+    });
+    testFastBattBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      batteryLevel = 84;
+      isLowBattery = false;
+      renderIsland();
+    });
+
+    // WhatsApp, Call & Message Listeners
+    simWhatsappBtn.addEventListener('click', () => {
+      msgBodyText.textContent = waMessages[waIndex].text;
+      setMode('whatsapp', true);
+    });
+
+    nextWaMsgBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (currentMode === 'insta') {
+        instaIndex = (instaIndex + 1) % instaMessages.length;
+        msgBodyText.textContent = instaMessages[instaIndex].text;
+      } else {
+        waIndex = (waIndex + 1) % waMessages.length;
+        msgBodyText.textContent = waMessages[waIndex].text;
+      }
+      renderIsland();
+    });
+
+    simCallBtn.addEventListener('click', () => {
+      isCallConnected = false;
+      callSeconds = 0;
+      setMode('call', true);
+    });
+    acceptCallBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      isCallConnected = true;
+      callSeconds = 1;
+      renderIsland();
+    });
+    declineCallBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      isCallConnected = false;
+      isExpanded = false;
+      currentMode = 'music';
+      renderIsland();
+    });
+
+    simMsgBtn.addEventListener('click', () => {
+      msgBodyText.textContent = '"Are we still on for coffee at 6?"';
+      setMode('message', true);
+    });
+
+    function sendQuickReply(replyText) {
+      playPopSound(680);
+      const via = currentMode === 'insta' ? 'Instagram DM' : (currentMode === 'whatsapp' ? 'WhatsApp' : 'SMS');
+      msgBodyText.textContent = `✓ Sent to ${via}: "${replyText}"`;
+      setTimeout(() => {
+        isExpanded = false;
+        renderIsland();
+      }, 950);
+    }
+
+    replyYesBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      sendQuickReply('👍 Sounds good!');
+    });
+    replyOmwBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      sendQuickReply('🏃 On my way!');
+    });
+
+    // Underlying App Wallpaper Switcher
+    function setUnderlyingApp(app) {
+      const activeBgBtn = 'px-2 py-0.5 rounded-lg bg-indigo-600 text-white text-[10px] font-medium transition';
+      const inactiveBgBtn = 'px-2 py-0.5 rounded-lg bg-slate-800 text-slate-300 hover:text-white text-[10px] font-medium transition';
+      bgHomeBtn.className = app === 'home' ? activeBgBtn : inactiveBgBtn;
+      bgBrowserBtn.className = app === 'browser' ? activeBgBtn : inactiveBgBtn;
+      bgMapsBtn.className = app === 'maps' ? activeBgBtn : inactiveBgBtn;
+
+      if (app === 'home') {
+        phoneScreen.className = 'relative w-full h-full rounded-[30px] overflow-hidden bg-gradient-to-br from-indigo-950 via-slate-900 to-slate-950 flex flex-col justify-between select-none transition-colors duration-500';
+      } else if (app === 'browser') {
+        phoneScreen.className = 'relative w-full h-full rounded-[30px] overflow-hidden bg-gradient-to-br from-slate-800 via-slate-900 to-zinc-900 flex flex-col justify-between select-none transition-colors duration-500';
+      } else if (app === 'maps') {
+        phoneScreen.className = 'relative w-full h-full rounded-[30px] overflow-hidden bg-gradient-to-br from-emerald-950 via-teal-950 to-slate-950 flex flex-col justify-between select-none transition-colors duration-500';
+      }
+    }
+
+    bgHomeBtn.addEventListener('click', () => setUnderlyingApp('home'));
+    bgBrowserBtn.addEventListener('click', () => setUnderlyingApp('browser'));
+    bgMapsBtn.addEventListener('click', () => setUnderlyingApp('maps'));
+
+    modeMusicBtn.addEventListener('click', () => setMode('music', false));
+    modeTimerBtn.addEventListener('click', () => setMode('timer', false));
+    modeBatteryBtn.addEventListener('click', () => setMode('battery', false));
+
+    quickToggleBtn.addEventListener('click', toggleIsland);
+    pulseTestBtn.addEventListener('click', triggerPopBounce);
+
+    xrayToggleBtn.addEventListener('click', () => {
+      isXray = !isXray;
+      renderIsland();
+    });
+
+    widthSlider.addEventListener('input', (e) => {
+      compactWidth = parseInt(e.target.value, 10);
+      widthVal.textContent = compactWidth + 'dp';
+      if (!isExpanded) renderIsland();
+    });
+
+    topSlider.addEventListener('input', (e) => {
+      topOffset = parseInt(e.target.value, 10);
+      topVal.textContent = topOffset + 'dp';
+      renderIsland();
+    });
+
+    resetCalibBtn.addEventListener('click', () => {
+      compactWidth = 132;
+      topOffset = 5;
+      widthSlider.value = '132';
+      topSlider.value = '5';
+      widthVal.textContent = '132dp';
+      topVal.textContent = '5dp';
+      renderIsland();
+    });
+
+    tabVisualBtn.addEventListener('click', () => switchTab('visual'));
+    tabCodeBtn.addEventListener('click', () => switchTab('code'));
+    tabSetupBtn.addEventListener('click', () => switchTab('setup'));
+    viewModeBtn.addEventListener('click', () => {
+      switchTab(currentTab === 'visual' ? 'code' : 'visual');
+    });
+
+    partCards.forEach((card) => {
+      card.addEventListener('click', () => {
+        const part = card.getAttribute('data-part');
+        if (part === 'anchor') {
+          setUnderlyingApp('maps');
+          setMode('maps', true);
+        } else if (part === 'state') {
+          setMode('cricket', true);
+        } else if (part === 'spring') {
+          switchTab('setup');
+        }
+      });
+    });
+
+    function copyTextFromElement(elId, btnEl, defaultLabel) {
+      const codeText = document.getElementById(elId).innerText;
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(codeText).catch(() => {});
+      } else {
+        const ta = document.createElement('textarea');
+        ta.value = codeText;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+      }
+      btnEl.textContent = 'Copied!';
+      setTimeout(() => {
+        btnEl.textContent = defaultLabel;
+      }, 1800);
+    }
+
+    copyCodeBtn.addEventListener('click', () => copyTextFromElement('kotlinCodeBlock', copyCodeBtn, 'Copy Kotlin Code'));
+    copyManifestBtn.addEventListener('click', () => copyTextFromElement('manifestCodeBlock', copyManifestBtn, 'Copy Manifest XML'));
+    const copyWorkflowBtn = document.getElementById('copyWorkflowBtn');
+    copyWorkflowBtn.addEventListener('click', () => copyTextFromElement('workflowCodeBlock', copyWorkflowBtn, 'Copy Cloud APK Builder (.yml)'));
+    const topQuickCopyGithubBtn = document.getElementById('topQuickCopyGithubBtn');
+    if (topQuickCopyGithubBtn) topQuickCopyGithubBtn.addEventListener('click', () => copyTextFromElement('workflowCodeBlock', topQuickCopyGithubBtn, '📋 Tap to Copy Code for GitHub'));
+
+    const fullscreenPhoneBtn = document.getElementById('fullscreenPhoneBtn');
+    const rightColSection = document.querySelector('section.lg\\:col-span-7');
+    const leftColSection = document.querySelector('section.lg\\:col-span-5');
+    let isFullscreenPhone = false;
+    fullscreenPhoneBtn.addEventListener('click', () => {
+      isFullscreenPhone = !isFullscreenPhone;
+      playPopSound(isFullscreenPhone ? 640 : 480);
+      if (isFullscreenPhone) {
+        rightColSection.classList.add('hidden');
+        leftColSection.classList.remove('lg:col-span-5');
+        leftColSection.classList.add('lg:col-span-12');
+        fullscreenPhoneBtn.textContent = '🔙 Exit Full-Screen Mode';
+      } else {
+        rightColSection.classList.remove('hidden');
+        leftColSection.classList.remove('lg:col-span-12');
+        leftColSection.classList.add('lg:col-span-5');
+        fullscreenPhoneBtn.textContent = '📱 Full-Screen Phone Mode';
+      }
+    });
+
+    // Initial render
+    renderIsland();
+  </script>
+</body>
+</html>
